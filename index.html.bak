@@ -1,0 +1,196 @@
+<html lang="en">
+<body>
+  <link type="text/css" rel="stylesheet" href="stylesheets/main.css" />
+  <nav class="main-nav" id="main-nav">
+    <div style="height:80px;background: rgb(51,74,92);padding-top: 1px;"><h2 class="text-center" style="color:#fff; letter-spacing:2px;">MENU</h2></div>
+    <ul class="nav nav-pills nav-stacked">
+      <li class="active"><a href="#"><i class="fa fa-home fa-fw"></i>&nbsp; Home</a></li>
+      <li><a href="#about"><i class="fa fa-user fa-fw"></i>&nbsp; About</a></li>
+      <li><a href="#what-i-do"><i class="fa fa-signal fa-fw"></i>&nbsp; What I do</a></li>
+      <li><a href="#work"><i class="fa fa-briefcase fa-fw"></i>&nbsp; Recent Work</a></li>
+      <li><a href="#contact"><i class="fa fa-envelope-o fa-fw"></i>&nbsp; Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrap">
+
+    <div class="jumbotron">
+      <div style="margin-top:130px" class="container">
+        <a href="#main-nav" class="h5 open-menu"><i style="color:#fff; position: relative; bottom:120px; cursor:pointer;" class="fa fa-bars fa-2x fa-fw"></i></a>
+        <a href="#" class="h5 close-menu"><i style="color:#fff; position: relative; bottom:120px; cursor:pointer;" class="fa fa-times fa-2x fa-fw"></i></a>
+        <h1> Lakshmi Narasimhan</h1>
+        <div class="spacer"></div>
+        <h1>F# Functional Programmer + C#.NET Developer</h1>
+        <div class="spacer"></div>
+        <hr><hr>
+        <h2 class="text-center">I build awesome Web/Win forms .NET apps</h2>
+      </div>
+    </div>
+
+    <div class="section" id="about"><h1>About</h1><hr></div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="well">
+            <img src="imgs/kannan.jpg" style="height:100%; width:100%">
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="well">
+            <h3>Lakshmi Narasimhan Devarajan</h3>
+            <p>
+            Seasoned Software developer with 10+ years of Technical experience in Microsoft’s C# & .Net Looking for a challenging position in client engagement & software delivery as a Technical Lead Developer keen on Full Stack Microsoft Developer position.<br/><br/>
+Expertise in .NET Multithreading, development and maintenance of Multi-Threaded applications, adherence to design patterns, process-orientation and conformance to standards & norms 
+<br/><br/>Solid Experience in Agile/ Scrum methodologies, JIRA, Storyboard creation and maintenance.<br/><br/>
+Recent intensive experience in AngularJS, npm, Chrome Dev Tools, SASS involving design & development tasks in a fast paced agile team(Including HTML5, CSS & Javascript.<br/>
+<br/>Experience in understanding functional requirements & Problems and creating Business requirement documents for translating Business Goals into Technical requirements.<br/>
+<br/>Good at Breaking down Technical Challenges into simple understandable and solvable sub-problems.<br/>
+<br/>Effective Communicator with excellent analytical Skills: 9-Spoken, 9-Written,8-Analytical on 10<br/>
+<br/>Good Interpersonal, Team-Building and Client Engagement Skills (Customer Engagement).<br/>
+Proven strategic communicator, providing intelligent information that finds its intended audience.<br/>
+<br/>Good experience in creating test plans, unit tests using Nunit & Test Driven Development. <br/>
+<br/>Excellent problem solving, analytical, Technical Development and documentation Skills.<br/>
+<br/>Good experience in creating test plans, technical specifications & operational documents. <br/>
+<br/>Good in resolving issues by analyzing and identifying bugs, planning modifications, implementing fixes & maintaining code and corresponding documentation. <br/>
+<br/>Result Oriented and Committed to meet goals, lead, inspire and mentor peers.<br/>
+</p>
+            <p><a href="#form" class="btn btn-default">Hire me</a></p>
+          </div>
+        </div>
+      </div><!--/.row-->
+    </div><!--/.container-->
+
+    <div class="section" id="what-i-do"><h1>What I Do</h1><hr></div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="well">
+            <h3>Skills</h3>
+            <div class="spacer"></div><div class="spacer"></div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="html"></div> <h4 style="font-weight: 400; display: inline;">F# DDD</h4><br>
+                <div class="css"></div> <h4 style="font-weight: 400; display: inline;">Azure</h4><br>
+                <div class="php"></div> <h4 style="font-weight: 400; display: inline;">C#.NET</h4><br>
+                <div class="sql"></div> <h4 style="font-weight: 400; display: inline; margin-bottom:5px;">SQL</h4>
+              </div>
+              <div class="col-md-8">
+                <div class="progress">
+                  <div class="progress-bar progress-bar-html" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 90%">
+                    <span class="sr-only">HTML5 90%</span>
+                  </div>
+                </div>
+                <div class="progress">
+                  <div class="progress-bar progress-bar-css" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 90%">
+                    <span class="sr-only">CSS3 90%</span>
+                  </div>
+                </div>
+                <div class="progress">
+                  <div class="progress-bar progress-bar-php" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%">
+                    <span class="sr-only">C# 70%</span>
+                  </div>
+                </div>
+                <div class="progress">
+                  <div class="progress-bar progress-bar-sql" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+                    <span class="sr-only">SQL 80%</span>
+                  </div>
+                </div>
+              </div><!--/.col-6-->
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="well">
+            <h3>I Build Domain Driven Applications</h3>
+            <p>Being a Functional Programmer on F# I can develop any Application from a database driven web app to a Windows Forms/WPF Application. Every custom solution built will focus on your business domain enabling higher accuracy  correlation</p>
+          </div>
+        </div>
+      </div><!--/.row-->
+    </div><!--/.container-->
+    <div class="work visible-lg" style="height:250px !important;">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3">
+            <h3><i class="fa fa-code"></i>&nbsp; Beautiful C# Code</h3>
+            <p>I write clean, semantic, organized C#(and F# too) that eliminates excess code and allows others to easily understand and therfore manage technical debt extremely well</p>
+          </div>
+          <div class="col-md-3">
+            <h3><i class="fa fa-fighter-jet"></i>&nbsp; Performant Applications</h3>
+            <p>I build fast and efficient .NET/ WinForms Applications, Fast & Efficient backend(SQL Server) and Application Performance Management. Such Optimizations are essential for Scaling and <abbr title="User Experience">UX</abbr> &mdash; <a href="https://blog.appdynamics.com/engineering/the-smoke-and-mirrors-of-ux-vs-application-performance/">Click here to know more</a>.</p>
+          </div>
+          <div class="col-md-3">
+            <h3><i class="fa fa-arrows-alt"></i>&nbsp; Application Performance Management & Optimizations</h3>
+            <p>I am experienced in resolving issues by analyzing and identifying bugs, planning modifications, implementing fixes & maintaining code and corresponding documentation.</p>
+          </div>
+          <div class="col-md-3">
+            <h3><i class="fa fa-bolt"></i>&nbsp; Recent Web & Cloud Experience</h3>
+            <p>From a static single page website to a full fledged database driven web app, I build have built websites that give organizations the potential to succeed.</p>
+          </div>
+        </div><!--/.row-->
+      </div><!--/.container-->
+    </div><!--/.work-->
+    <!--mobile work-->
+    <div class="container hidden-lg">
+      <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="well">
+            <h3><i class="fa fa-code"></i>&nbsp; Beautiful C# Code</h3>
+            <p>I write clean, semantic, organized C#(and F# too) that eliminates excess code and allows others to easily understand and therfore manage technical debt extremely well</p>
+          </div>
+        </div>
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="well">
+          <h3><i class="fa fa-fighter-jet"></i>&nbsp; Performant Applications</h3>
+            <p>I build fast and efficient .NET/ WinForms Applications, Fast & Efficient backend(SQL Server) and Application Performance Management. Such Optimizations are essential for Scaling and <abbr title="User Experience">UX</abbr> &mdash; <a href="https://blog.appdynamics.com/engineering/the-smoke-and-mirrors-of-ux-vs-application-performance/">Click here to know more</a>.</p>
+           </div>
+        </div>
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="well">
+             <h3><i class="fa fa-arrows-alt"></i>&nbsp; Application Performance Management & Optimizations</h3>
+            <p>I am experienced in resolving issues by analyzing and identifying bugs, planning modifications, implementing fixes & maintaining code and corresponding documentation.</p>
+          </div>
+        </div>
+        <div class="col-md-12 col-sm-12 col-xs-12">
+          <div class="well">
+            <h3><i class="fa fa-bolt"></i>&nbsp; Recent Web & Cloud Experience</h3>
+            <p>From a static single page website to a full fledged database driven web app, I build have built websites that give organizations the potential to succeed.</p>
+          </div>
+        </div>
+      </div><!--/.row-->
+    </div><!--/.container and mobile work-->
+
+
+    <div class="section" id="work"><h1>Recent Work</h1><hr></div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="well">
+            <a href="https://github.com/Lagerinn"><img src="https://avatars3.githubusercontent.com/u/19312294?s=200&v=4" alt="jysk.ca" height="150px" class="pull-left" style="padding-right: 15px; padding-bottom: 10px; padding-top:20px;"></a>
+            <h3>Lagerinn Dutch Holding BV</h3>
+            <p>Migration to NoSQL(CosmosDB), WebAPI & AngularJS from Winforms .NET SQL Legacy Application</p>
+            <div class="spacer"></div><div class="spacer"></div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="well">
+            <a href="https://github.com/topics/infosys"><img src="https://www.infosys.com/SiteCollectionImages/media-resources/infosys-logo-PNG.png" alt="infosys.com" height="150px" class="pull-left" style="padding-right: 15px; padding-bottom: 10px; padding-top:20px;"></a>
+            <h3>Infosys</h3>
+            <p>Worked as a C#.NET Developer on Energy domain.(OCEAN Web API,WPF & Plug-in Development)</p>
+            <div class="spacer"></div><div class="spacer"></div>
+          </div>
+        </div>
+      </div><!--/.row-->	
+    </div><!--/.container-->
+
+
+    <!--<div class="hidden-xs"><div class="work-together" id="contact">LETS WORK TOGETHER</div></div>-->
+    <div class="section" id="contact"><h1>Let&apos;s Work Together</h1><hr></div>
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSexyoAHTDpM3kKHG0dCyzLjpH4RZpeLA746gQIL944EO9-3Xw/viewform?embedded=true" width="640" height="1281" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+      
+    
+  </div><!--/.page-wrap-->
+</body>
+</html>
