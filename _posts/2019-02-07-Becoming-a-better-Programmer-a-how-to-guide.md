@@ -1,6 +1,6 @@
 ---
 title: "On Becoming a Better Programmer  A How-to Guide!"
-published: true
+published: false
 ---
 
 Be it in CS Engineering or in a Job We all start writing code somewhere.
@@ -26,6 +26,7 @@ Some Interesting Books worth Purchasing:
 	Dmitri Fontaine’s Mastering postgesSQL
 	Baron shwartz High performance MySQL
 Dynamodbguide.com has an interesting getting started guide on NoSQL DBs using Amazon's AWS as a primary example. 
+
 3.	Become Protocol polygot TCP/IP, HTTP,UDP,FTP
 Must know : SSL,TLS,Applayer Intergrations
  		Sockets and ports
