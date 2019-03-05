@@ -3,9 +3,9 @@ title: "On Becoming a Better Programmer  A How-to Guide!"
 published: true
 ---
 
-**Hello there**, Be it in CS Engineering or in a Job We all start writing code somewhere.
+Be it in CS Engineering or in a Job We all start writing code somewhere.
 **Placeholder**
-I have composed a guide on becoming a better programmer below I hope you like it! 
+I have composed a **definitive guide on becoming a better programmer** below I hope you like it! 
 **End of Placeholder**
 
 1.	Become a Paradigm polygot- 
