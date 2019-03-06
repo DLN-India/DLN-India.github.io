@@ -16,12 +16,17 @@ defaults:
       layout: "post"
 
 topics:
-  - name: CSS
-    web_url: https://github.com/topics/css
-    image_url: https://raw.githubusercontent.com/github/explore/6c6508f34230f0ac0d49e847a326429eefbfc030/topics/css/css.png
-
+  - name: docs
+    web_url: https://github.com/topics/docs
+  - name: C#
+    web_url: https://github.com/topics/C#
+  - name: F#
+    web_url: https://github.com/topics/F#
+  - name: System Design
+    web_url: https://github.com/topics/system-design
+  - name: Web
+    web_url: https://github.com/topics/web
   - name: Web design
-
-  - name: Sass
-    web_url: https://github.com/topics/sass
-    image_url: https://raw.githubusercontent.com/github/explore/6c6508f34230f0ac0d49e847a326429eefbfc030/topics/sass/sass.png
+    web_url: https://github.com/topics/web-design
+  - name: ASP.NET Core
+    web_url: https://github.com/topics/asp-net-core
