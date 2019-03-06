@@ -1,6 +1,6 @@
 ---
 title: "On Becoming a Better Programmer  A How-to Guide!"
-published: false
+published: true
 ---
 
 Be it in CS Engineering or in a Job We all start writing code somewhere.
