@@ -1,6 +1,6 @@
 ---
 title: "On Becoming a Better Programmer  A How-to Guide!"
-published: false
+published: true
 ---
 
 Be it in CS Engineering or in a Job We all start writing code somewhere.
@@ -62,7 +62,7 @@ Books:
 Martin kleppman’s Designing Data Intensive Apps
 Michel keeling Design It
 Gayle laakman- cracking the coding interview -Interesting resource to lookup on potential architecting questions. 
-Vasantk & Donnemartin's github repo's on Architecting systems. 
+(Vasantk gist)[https://gist.github.com/vasanthk/485d1c25737e8e72759f] & (Donnemartin's github repo's)[https://github.com/donnemartin/system-design-primer] on Architecting systems. 
 7. ABILITY TO WRITE TOY GAMES
 (good interview skills,tetris in an hour)
 -write a bot that plays the game you make 
