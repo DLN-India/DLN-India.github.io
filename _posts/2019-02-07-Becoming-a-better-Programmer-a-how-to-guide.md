@@ -8,15 +8,15 @@ Be it in CS Engineering or in a Job We all start writing code somewhere.
 I have composed a **definitive guide on becoming a better programmer** below I hope you like it!
 **End of Placeholder**
 
-##	Become a Paradigm polygot-
+##	Become a Paradigm polygot
 Real world oCaml by Yaron minsky
 In a fast paced industry mere knowledge of programming languages using Object Oriented Programming or Functional Programming isn't just sufficient. A combination thereof is very much a requim if not a catalyst for alternative or out of the box thinking to solving problems with Programming languages.
 
-	Some exercises worth undertaking
-	Try Solving 99 prolog problems
-	use Tool.golang.org for learning a famous language.
+Some exercises worth undertaking:
+Try Solving 99 prolog problems
+use Tool.golang.org for learning a famous language.
 
-	Dan grossman-Programming language-coursera is an interesting resource well worth anyone & everyone's time (For an Industry veteran or newbie in the software services industry)
+Dan grossman-Programming language-coursera is an interesting resource well worth anyone & everyone's time (For an Industry veteran or newbie in the software services industry)
 
 ## Become a Database polygot
 
@@ -48,12 +48,17 @@ Additionally:
    • Write your own build tooling.
    • Compile/run multi-file program
 
-##5. Ability to analyze reason about and debug programs
+## Ability to analyze reason about and debug programs
+
+Eclipse, Visual Studio, Android Studio & IDE's alike excel in their ability to run, debug and visualize stack in a step by step basis.
+
+There's chrome dev tools for Javascript and the list is endless but having a command over the build  
+
 
 ##6. Deplyments infrastructure & devops                  Linuxacademy.com has a great bunch of hands-on-labs.
 	Capistrano deployment system                          qwiklabs.com also has similar hands-on-labs.
 
-**Software Architecting principles and basic scaling techniques.**
+## Software Architecting principles and basic scaling techniques.
 - how to design everyday system
 - how to use workers,queues and sync processing
 - how to design a data pipeline
@@ -63,7 +68,7 @@ Martin kleppman’s Designing Data Intensive Apps
 Michel keeling Design It
 Gayle laakman- cracking the coding interview -Interesting resource to lookup on potential architecting questions.
 Vasantk & Donnemartin's github repo's on Architecting systems.
-##7. ABILITY TO WRITE TOY GAMES
+## ABILITY TO WRITE TOY GAMES
 (good interview skills,tetris in an hour)
 -write a bot that plays the game you make
 -make a game like minesweeper,snake,jumperfrog
