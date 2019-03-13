@@ -50,9 +50,9 @@ Additionally:
    • Write your own build tooling.
    • Compile/run multi-file program
 
-5.Ability to analyze reason about and debug programs
+## Ability to analyze reason about and debug programs
 
-6.Deplyments infrastructure & devops                  Linuxacademy.com has a great bunch of hands-on-labs.
+## Deplyments infrastructure & devops                  Linuxacademy.com has a great bunch of hands-on-labs.
 Capistrano deployment system                          qwiklabs.com also has similar hands-on-labs.
 
 **Software Architecting principles and basic scaling techniques.**
