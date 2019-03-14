@@ -1,5 +1,5 @@
 ---
-title: "Welcome to Jekyll!"
+title: "The Four Disciplines of Execution: 4dx Principle!"
 published: true
 ---
 The Four Disciples of Execution: Learning to put your plans into practice.
