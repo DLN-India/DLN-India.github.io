@@ -59,6 +59,8 @@ There's chrome dev tools for Javascript and the list is endless but having a com
 
 
 
+## Deplyments infrastructure & devops                  Linuxacademy.com has a great bunch of hands-on-labs.
+Capistrano deployment system                          qwiklabs.com also has similar hands-on-labs.
 
 ##Software Architecting principles and basic scaling techniques.**
 -how to design everyday system
@@ -69,12 +71,12 @@ Books:
 Martin kleppman’s Designing Data Intensive Apps
 Michel keeling Design It
 Gayle laakman- cracking the coding interview -Interesting resource to lookup on potential architecting questions.
-[Vasantk gist](https://gist.github.com/vasanthk/485d1c25737e8e72759f) & [Donnemartin's github repo](https://github.com/donnemartin/system-design-primer) on Architecting systems.
+[[Vasantk gist](https://gist.github.com/vasanthk/485d1c25737e8e72759f)] & [[Donnemartin's github repo](https://github.com/donnemartin/system-design-primer)] on Architecting systems.
 1.ABILITY TO WRITE TOY GAMES
 (good interview skills,tetris in an hour)
 -write a bot that plays the game you make
 -make a game like minesweeper,snake,jumperfrog
-## ALGORITMIC ANALYSIS ABILITY AND SOLVING ALGO PROBS
+8.ALGORITMIC ANALYSIS ABILITY AND SOLVING ALGO PROBS
 -ability to solve problems recursively
 -understand the master method to analyze recursive solutions
 Resources:

@@ -1,4 +1,4 @@
-#
+
 # The Four Disciples of Execution: Learning to put your plans into practice.
 
 At the start of every year, many of us make bold promises to change our lives. We get a gym membership and decide we&#39;ll have those abs by summer. But then February rolls around, and we&#39;re as gym-shy as we were in December. Why is that? Quite simply, We&#39;re creatures of habit and our old behavior sets back in every time we want to bring about change. This is how we fail when it comes to execution.
@@ -11,7 +11,7 @@ As this book will show you, there are four disciplines you should try to follow 
 - why fuzzy goals won&#39;t get you to the moon and back; and
 - why you should always have a scoreboard in the office.
 
-#
+
 # Getting people to change is the real challenge of executing strategic goals.
 
 Change is good, especially from a business standpoint. Why? Well, look at it this way: If you aren&#39;t always improving, you&#39;re creating an opportunity for your competition to swoop in. Preventing that is a big challenge. And here&#39;s why:
@@ -30,7 +30,7 @@ All of these problems and decisions are called the _whirlwind_ – a term the au
 
 Although it&#39;s difficult, you can achieve major strategic goals despite the whirlwind. Mastering the four disciplines of execution makes it easier. And we&#39;ll explain those to you in the upcoming sections.
 
-#
+
 # Focusing on specific, wildly important goals is the first discipline of execution.
 
 The first discipline of execution is to focus solely on what matters.
@@ -47,7 +47,7 @@ To understand why specificity can be so powerful, consider this story: In 1958, 
 
 As the NASA example makes clear, it&#39;s important to find WIGs that make a major impact. You don&#39;t want to use up all your blood, sweat and tears on something that doesn&#39;t really make a difference for your company.
 
-#
+
 # The second discipline of execution: meet your goals by choosing measures that reflect current behavior.
 
 As we learned in the previous section, you have to focus on achieving wildly important goals. And to do so, you should concentrate on measures that help you win, not measures that make you depressed when you come up short.
@@ -64,7 +64,7 @@ With the losing weight scenario, calorie counts and exercise metrics would be gr
 
 Of course, we all know that the path to weight loss involves eating less junk food and exercising more. But knowing and doing are two different things. And you&#39;re more likely to actually follow through on your plans when you keep track of lead measures, since these metrics show you how your current actions directly influence your goal.
 
-#
+
 # Motivate your team by keeping score of their performance: the third discipline of execution.
 
 With the first two disciplines, you define your wildly important goal and identify which metrics will help you achieve it. The third discipline is about helping your staffers identify with the goal, thereby motivating them to help you achieve it!
@@ -79,11 +79,6 @@ Since motivation is the goal of the scoreboard, you should make sure it&#39;s co
 
 Let&#39;s say that increasing production by 20 percent by year&#39;s end is one of your WIGs. And to meet that goal, your team has to increase production by five percent each month. Your scoreboard should show lag and lead measures related to this specific goal, so your team knows how they&#39;re actually performing.
 
-Top of Form
-
-Bottom of Form
-
-#
 # The fourth discipline of execution is establishing a culture of accountability.
 
 With the third discipline, we learned how to motivate staffers to be part of your wildly important goals. But the fourth discipline is the real heart of the execution process: It&#39;s about making team members commit long-term to the goal.
@@ -100,7 +95,6 @@ Valet parking services company, Town Park, offers a great example of how this wo
 
 So much for the four disciplines! But it&#39;s not quite so simple: It takes real effort and commitment to implement them in your own workplace. Read on to learn how!
 
-#
 # Follow a step-by-step process to implement wildly important goals and identify useful predictive measures.
 
 Introducing the four disciplines to your own workplace might be tricky at first, but it will be well worth the effort! To install the first discipline (identifying a WIG), just follow these four easy steps:
@@ -117,7 +111,6 @@ And then comes the final step, which is to identify a simple and clear definitio
 
 You can follow these exact same steps to select your lead measures, thus implementing the second discipline. It&#39;s especially useful to constantly re-evaluate and test your lead measures, thus making sure that they are predictive, precise and measurable.
 
-#
 # Follow through on introducing a scoreboard and creating a cycle of accountability.
 
 As we saw in the previous section, you can follow a few simple steps to install the first and second disciplines. You can&#39;t introduce the third and fourth disciplines with such methodic neatness – but some kind of plan is required.
@@ -136,7 +129,6 @@ Keep in mind that the whirlwind has nothing to do with the WIG meeting, and make
 
 If they don&#39;t meet a commitment, make sure you handle it respectfully. Let the staffer know you value their work, but explain that it&#39;s crucial, for the sake of the whole team, that everyone follow through on their WIG commitments. And then, make sure to give them a chance to catch up on their commitment.
 
-#
 # Follow a six-step process to involve all departments in the Four Disciplines model.
 
 If you want to implement the Four Disciplines at a large organization with more than ten different departments, make sure you plan it out carefully. This process involves six steps:
