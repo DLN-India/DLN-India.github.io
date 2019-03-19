@@ -16,17 +16,29 @@ defaults:
       layout: "post"
 
 topics:
-  - name: docs
-    web_url: https://github.com/topics/docs
+  - name: documentation
+    web_url: https://github.com/topics/documentation
+    image_url: 
   - name: C#
     web_url: https://github.com/topics/C#
-  - name: F#
-    web_url: https://github.com/topics/F#
+    image_url: https://raw.githubusercontent.com/github/explore/7f96d7ea34ea0b21f159792a6a8f43b716b33379/topics/csharp/csharp.png
+  - name: ASP.NET
+    web_url: https://github.com/topics/aspnet
+    image_url: https://raw.githubusercontent.com/github/explore/810200c742ba8daf9eaf98bbbde9f4eb2149fd8d/topics/aspnet/aspnet.png
   - name: System Design
     web_url: https://github.com/topics/system-design
-  - name: Web
-    web_url: https://github.com/topics/web
-  - name: Web design
-    web_url: https://github.com/topics/web-design
+  - name: git
+    web_url: https://github.com/topics/git
+    image_url: https://raw.githubusercontent.com/github/explore/6c6508f34230f0ac0d49e847a326429eefbfc030/topics/git/git.png
+  - name: .NET Framework
+    web_url: https://github.com/topics/dotnet
+    image_url: https://raw.githubusercontent.com/github/explore/6c6508f34230f0ac0d49e847a326429eefbfc030/topics/dotnet/dotnet.png
   - name: ASP.NET Core
     web_url: https://github.com/topics/asp-net-core
+
+social_media:
+    facebook:   narasimhandl
+    telegram:   narasimhandl
+    twitter:    narasimhandev
+    medium: narasimhandl
+    linkedin:   laksh-naras
