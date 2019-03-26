@@ -1,8 +1,8 @@
 ---
 title: "On Becoming a Better Programmer  A How-to Guide!"
-published: false
+published: true
 ---
-
+YYY
 Be it in CS Engineering or in a Job We all start writing code somewhere.
 ##**8 Steps to becoming a better Programmer**
 I have composed a **definitive guide on becoming a better programmer** below I hope you like it!
