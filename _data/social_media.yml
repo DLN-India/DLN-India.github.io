@@ -1,0 +1,53 @@
+email:
+  id: 'devarajanlakshmi@icloud.com'
+  href: 'mailto:'
+  title: 'Email'
+  fa-icon: 'fa-envelope-square'
+
+facebook:
+  id: DLakshmiNarasimhan
+  href: 'https://www.facebook.com/'
+  title: 'Facebook'
+  fa-icon: 'fa-facebook-square'
+
+twitter:
+  id: 'narasimhandev'
+  href: 'https://www.twitter.com/'
+  title: 'Twitter'
+  fa-icon: 'fa-twitter-square'
+
+googleplus:
+  id: 'narasimhandl'
+  href: 'https://plus.google.com/'
+  title: 'Google+'
+  fa-icon: 'fa-google-plus-square'
+
+github:
+  id: 'narasimhandl'
+  href: 'https://github.com/'
+  title: 'GitHub'
+  fa-icon: 'fa-github-square'
+
+github:
+  id: 'dln-india'
+  href: 'https://github.com/'
+  title: 'GitHub'
+  fa-icon: 'fa-github-square'
+  
+linkedin:
+  id: 'laksh-naras'
+  href: 'https://www.linkedin.com/in/'
+  title: 'LinkedIn'
+  fa-icon: 'fa-linkedin-square'
+
+instagram:
+  id: 'narasimhandl'
+  href: 'https://instagram.com/'
+  title: 'Instagram'
+  fa-icon: 'fa-instagram'
+
+stackoverflow:
+  id: 1947767
+  href: 'http://stackoverflow.com/'
+  title: 'StackOverflow'
+  fa-icon: 'fa-stack-overflow'

@@ -4,6 +4,8 @@ style: light
 plugins:
   - jekyll-octicons
   - jekyll-github-metadata
+  - jekyll-font-awesome-sass
+  - jekyll-seo-tag
 
 permalink: /:year/:month/:day/:title/
 
@@ -42,3 +44,5 @@ social_media:
     twitter:    narasimhandev
     medium: narasimhandl
     linkedin:   laksh-naras
+    stackoverflow:  1947767
+    
