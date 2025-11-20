@@ -11,6 +11,21 @@ This guide will help you deploy your portfolio website to GitHub Pages.
 - [x] Social media links configured
 - [x] Navigation menu functional
 - [x] Mobile responsive design verified
+- [x] `.nojekyll` file added (for static HTML deployment)
+
+## ⚙️ Important: Jekyll vs Static HTML
+
+This repository contains both Jekyll structure (`_config.yml`, `_includes/`, `_layouts/`) and a **static HTML portfolio**. The `.nojekyll` file tells GitHub Pages to serve the site as **static HTML** rather than processing it through Jekyll.
+
+**Why `.nojekyll`?**
+- The portfolio (`index.html`, `insights.html`) is pure HTML/CSS/JS
+- Without `.nojekyll`, GitHub Pages would try to build it as Jekyll
+- This would cause issues since the HTML files don't use Jekyll front matter
+
+**If you want to use Jekyll instead:**
+- Remove `.nojekyll`
+- Convert `index.html` to use Jekyll layouts
+- The site will be built automatically on each push
 
 ## 🚀 Quick Deploy to GitHub Pages
 
