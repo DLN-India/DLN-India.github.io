@@ -138,6 +138,25 @@ body {
     animation: fadeInUp 1s ease-out;
 }
 
+.hero-profile {
+    margin-bottom: 1.5rem;
+}
+
+.profile-image {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--orange);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transition: var(--transition);
+}
+
+.profile-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(255, 107, 53, 0.4);
+}
+
 .hero-title {
     font-size: 3.5rem;
     font-weight: 700;
