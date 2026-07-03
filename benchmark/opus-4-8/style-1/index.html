@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Vizchitra 2026 workshop visualization — interactive FIFA World Cup 2026 group stage dashboard" />
+<title>Vizchitra 2026 | FIFA World Cup Group Stage Visualization</title>
+<style>
+  :root{
+    --bg:#080b14;
+    --bg2:#0d1220;
+    --panel:#121a2c;
+    --panel2:#0f1626;
+    --line:#1f2a44;
+    --line-soft:#182238;
+    --txt:#e8edf7;
+    --txt-dim:#9aa7c2;
+    --txt-faint:#5f6d8c;
+    --blue:#338ef7;
+    --blue-deep:#1e5bb8;
+    --cyan:#28e0d0;
+    --gold:#ffcc33;
+    --green:#31d68f;
+    --amber:#ffab3d;
+    --red:#ff5d6c;
+    --violet:#a98bff;
+    --shadow:0 10px 30px rgba(0,0,0,.45);
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(1200px 700px at 12% -8%, rgba(51,142,247,.14), transparent 60%),
+      radial-gradient(1000px 600px at 100% 0%, rgba(40,224,208,.08), transparent 55%),
+      var(--bg);
+    color:var(--txt);
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.45;
+  }
+  .wrap{max-width:1480px;margin:0 auto;padding:26px 26px 80px}
+
+  /* Header */
+  header.top{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+  .brand{display:flex;align-items:center;gap:16px}
+  .crest{
+    width:54px;height:54px;border-radius:14px;flex:none;
+    background:linear-gradient(145deg,var(--blue),var(--blue-deep));
+    display:grid;place-items:center;box-shadow:0 8px 22px rgba(51,142,247,.35);
+    position:relative;overflow:hidden;
+  }
+  .crest svg{width:30px;height:30px}
+  .crest::after{content:"";position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,255,255,.25),transparent 45%)}
+  .brand h1{font-size:22px;margin:0;letter-spacing:.3px;font-weight:800}
+  .brand .sub{margin:2px 0 0;color:var(--txt-dim);font-size:13px;font-weight:500}
+  .brand .kicker{color:var(--cyan);font-weight:700;font-size:11px;letter-spacing:2px;text-transform:uppercase}
+  .live-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(49,214,143,.12);border:1px solid rgba(49,214,143,.35);color:var(--green);font-size:12px;font-weight:600;padding:7px 14px;border-radius:999px}
+  .live-pill .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(49,214,143,.6);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(49,214,143,.5)}70%{box-shadow:0 0 0 8px rgba(49,214,143,0)}100%{box-shadow:0 0 0 0 rgba(49,214,143,0)}}
+
+  /* Filter bar */
+  .filters{
+    background:linear-gradient(180deg,var(--panel),var(--panel2));
+    border:1px solid var(--line);border-radius:var(--radius);
+    padding:16px 18px;display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px;box-shadow:var(--shadow)
+  }
+  .fld{display:flex;flex-direction:column;gap:6px;min-width:150px;flex:1}
+  .fld label{font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--txt-faint);font-weight:700}
+  .fld select{
+    appearance:none;background:var(--bg2);color:var(--txt);border:1px solid var(--line);
+    border-radius:10px;padding:10px 34px 10px 12px;font-size:13px;font-weight:600;cursor:pointer;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239aa7c2' stroke-width='3'><path d='M6 9l6 6 6-6'/></svg>");
+    background-repeat:no-repeat;background-position:right 12px center;transition:border-color .15s,box-shadow .15s
+  }
+  .fld select:hover{border-color:var(--blue)}
+  .fld select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(51,142,247,.2)}
+  .reset-btn{
+    background:rgba(255,93,108,.1);border:1px solid rgba(255,93,108,.35);color:var(--red);
+    font-weight:700;font-size:12.5px;padding:11px 18px;border-radius:10px;cursor:pointer;height:41px;transition:.15s
+  }
+  .reset-btn:hover{background:rgba(255,93,108,.2)}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:-6px 0 20px}
+  .chip{display:inline-flex;align-items:center;gap:7px;background:rgba(51,142,247,.13);border:1px solid rgba(51,142,247,.4);color:#cfe2ff;font-size:12px;font-weight:600;padding:6px 10px;border-radius:999px;cursor:pointer}
+  .chip b{color:var(--txt-faint);font-weight:700;text-transform:uppercase;font-size:9.5px;letter-spacing:1px}
+  .chip .x{opacity:.7}
+  .chip:hover{background:rgba(51,142,247,.25)}
+
+  /* KPI cards */
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:26px}
+  .kpi{
+    position:relative;background:linear-gradient(180deg,var(--panel),var(--panel2));
+    border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 16px;overflow:hidden;box-shadow:var(--shadow)
+  }
+  .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent,var(--blue))}
+  .kpi .klabel{font-size:10.5px;letter-spacing:1.3px;text-transform:uppercase;color:var(--txt-faint);font-weight:700}
+  .kpi .kval{font-size:32px;font-weight:800;letter-spacing:-.5px;margin-top:8px;line-height:1}
+  .kpi .kfoot{font-size:12px;color:var(--txt-dim);margin-top:8px;font-weight:500}
+  .kpi .kicon{position:absolute;top:16px;right:16px;opacity:.5}
+
+  /* Section headers */
+  .section-h{display:flex;align-items:baseline;gap:14px;margin:30px 0 16px}
+  .section-h .num{font-size:12px;font-weight:800;color:var(--bg);background:var(--cyan);width:26px;height:26px;border-radius:8px;display:grid;place-items:center;flex:none}
+  .section-h h2{font-size:18px;margin:0;font-weight:800;letter-spacing:.2px}
+  .section-h p{margin:0;color:var(--txt-dim);font-size:13px}
+
+  /* Grid & panels */
+  .grid{display:grid;gap:18px}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3-2{grid-template-columns:1.3fr 1fr}
+  .card{
+    background:linear-gradient(180deg,var(--panel),var(--panel2));
+    border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 14px;box-shadow:var(--shadow)
+  }
+  .card .chd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+  .card h3{font-size:14.5px;margin:0;font-weight:700}
+  .card .csub{font-size:12px;color:var(--txt-faint);margin:2px 0 12px;font-weight:500}
+  .hint{font-size:11px;color:var(--txt-faint);font-weight:600}
+  .seg{display:inline-flex;background:var(--bg2);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .seg button{background:transparent;border:none;color:var(--txt-dim);font-size:11.5px;font-weight:700;padding:6px 11px;cursor:pointer}
+  .seg button.on{background:var(--blue);color:#fff}
+
+  svg .grid-line{stroke:var(--line);stroke-width:1;stroke-dasharray:3 4;opacity:.55}
+  svg text{font-family:inherit}
+  .axis-lbl{fill:var(--txt-faint);font-size:10.5px;font-weight:600}
+  .val-lbl{fill:var(--txt);font-size:11px;font-weight:700}
+  .bar-row{cursor:pointer}
+  .bar-row:hover rect.barfill{filter:brightness(1.18)}
+  .clickable{cursor:pointer}
+  .dot-pt{cursor:pointer;transition:r .1s}
+  .dot-pt:hover{stroke:#fff;stroke-width:2}
+
+  /* Table */
+  .table-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+  .search{flex:1;min-width:180px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:9px 12px;color:var(--txt);font-size:13px;font-weight:500}
+  .search:focus{outline:none;border-color:var(--blue)}
+  .tbl-scroll{overflow:auto;max-height:460px;border-radius:12px;border:1px solid var(--line)}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  thead th{position:sticky;top:0;background:#0e1524;z-index:2;text-align:left;padding:11px 12px;font-size:10.5px;letter-spacing:.8px;text-transform:uppercase;color:var(--txt-faint);font-weight:700;cursor:pointer;white-space:nowrap;border-bottom:1px solid var(--line)}
+  thead th:hover{color:var(--txt)}
+  thead th .arr{opacity:.5;font-size:9px}
+  tbody td{padding:10px 12px;border-bottom:1px solid rgba(31,42,68,.5);white-space:nowrap}
+  tbody tr{cursor:pointer;transition:background .1s}
+  tbody tr:hover{background:rgba(51,142,247,.09)}
+  .scorebox{font-weight:800;font-variant-numeric:tabular-nums;background:var(--bg2);border:1px solid var(--line);border-radius:7px;padding:2px 9px;display:inline-block}
+  .tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;letter-spacing:.4px}
+  .tag.H{background:rgba(49,214,143,.15);color:var(--green)}
+  .tag.A{background:rgba(169,139,255,.15);color:var(--violet)}
+  .tag.D{background:rgba(255,171,61,.15);color:var(--amber)}
+  .muted{color:var(--txt-dim)}
+
+  /* Tooltip */
+  #tip{position:fixed;pointer-events:none;z-index:100;background:rgba(9,13,22,.97);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12px;box-shadow:0 12px 30px rgba(0,0,0,.6);max-width:280px;opacity:0;transition:opacity .1s;backdrop-filter:blur(6px)}
+  #tip .tt-h{font-weight:800;font-size:12.5px;margin-bottom:5px}
+  #tip .tt-r{display:flex;justify-content:space-between;gap:16px;color:var(--txt-dim)}
+  #tip .tt-r b{color:var(--txt);font-weight:700}
+
+  /* Modal */
+  .modal-bg{position:fixed;inset:0;background:rgba(4,7,14,.72);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;padding:24px}
+  .modal-bg.show{display:flex}
+  .modal{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:20px;max-width:720px;width:100%;max-height:88vh;overflow:auto;box-shadow:0 30px 80px rgba(0,0,0,.7)}
+  .modal-head{padding:22px 24px 18px;border-bottom:1px solid var(--line);position:relative}
+  .modal-head .mw{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan);font-weight:700}
+  .modal-head .mteams{display:flex;align-items:center;justify-content:center;gap:22px;margin-top:10px}
+  .modal-head .mteams .t{font-size:19px;font-weight:800;flex:1}
+  .modal-head .mteams .t.h{text-align:right}
+  .modal-head .mteams .sc{font-size:30px;font-weight:900;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:4px 16px;font-variant-numeric:tabular-nums}
+  .modal-head .mmeta{text-align:center;color:var(--txt-dim);font-size:12.5px;margin-top:10px}
+  .mclose{position:absolute;top:16px;right:18px;background:var(--bg2);border:1px solid var(--line);color:var(--txt-dim);width:32px;height:32px;border-radius:9px;cursor:pointer;font-size:16px}
+  .mclose:hover{color:#fff;border-color:var(--red)}
+  .statgrid{padding:20px 24px 24px}
+  .statrow{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;margin-bottom:14px}
+  .statrow .bar{height:8px;border-radius:5px;background:var(--bg2);position:relative;overflow:hidden}
+  .statrow .bl{position:absolute;right:50%;top:0;bottom:0;background:var(--green);border-radius:5px 0 0 5px}
+  .statrow .br{position:absolute;left:50%;top:0;bottom:0;background:var(--violet);border-radius:0 5px 5px 0}
+  .statrow .lbl{text-align:center;font-size:10.5px;letter-spacing:.8px;text-transform:uppercase;color:var(--txt-faint);font-weight:700}
+  .statrow .hv{text-align:right;font-weight:800;font-size:14px}
+  .statrow .av{text-align:left;font-weight:800;font-size:14px}
+  .mextra{display:flex;justify-content:space-between;gap:16px;padding:16px 24px;border-top:1px solid var(--line);color:var(--txt-dim);font-size:12px;flex-wrap:wrap}
+  .mextra b{color:var(--txt)}
+
+  /* Conclusions */
+  .insights{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .insight{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);padding:18px;position:relative;overflow:hidden}
+  .insight .ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;margin-bottom:12px;font-size:18px}
+  .insight h4{margin:0 0 6px;font-size:14px;font-weight:700}
+  .insight p{margin:0;color:var(--txt-dim);font-size:13px;line-height:1.5}
+  .insight p b{color:var(--txt);font-weight:700}
+  .empty{color:var(--txt-faint);text-align:center;padding:40px;font-size:13px}
+  footer{margin-top:40px;text-align:center;color:var(--txt-faint);font-size:11.5px;border-top:1px solid var(--line);padding-top:20px}
+
+  @media(max-width:1150px){.kpis{grid-template-columns:repeat(3,1fr)}.g2,.g3-2{grid-template-columns:1fr}.insights{grid-template-columns:1fr}}
+  @media(max-width:640px){.kpis{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="crest">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 3l2.6 6.3 6.4.2-5 4 1.8 6.3-5.8-3.6-5.8 3.6 1.8-6.3-5-4 6.4-.2z" fill="rgba(255,255,255,.15)"/></svg>
+      </div>
+      <div>
+        <div class="kicker">Vizchitra 2026 · Workshop Visualization</div>
+        <h1>FIFA World Cup 2026 — Group Stage</h1>
+        <p class="sub">Interactive dashboard · 72 matches · 48 nations · offensive, defensive, tactical & attendance intelligence</p>
+      </div>
+    </div>
+    <div class="live-pill"><span class="dot"></span> Group Stage · Data Synced</div>
+  </header>
+
+  <!-- Filters -->
+  <div class="filters" id="filters">
+    <div class="fld"><label>Team</label><select id="f-team"></select></div>
+    <div class="fld"><label>Venue</label><select id="f-venue"></select></div>
+    <div class="fld"><label>Gameweek</label><select id="f-gw"></select></div>
+    <div class="fld"><label>Referee</label><select id="f-ref"></select></div>
+    <div class="fld"><label>Formation</label><select id="f-form"></select></div>
+    <button class="reset-btn" id="reset">Reset ✕</button>
+  </div>
+  <div class="chips" id="chips"></div>
+
+  <!-- KPIs -->
+  <div class="kpis" id="kpis"></div>
+
+  <!-- 1. Tournament Overview -->
+  <div class="section-h"><span class="num">1</span><div><h2>Tournament Overview</h2><p>The shape of the group stage — outcomes and scoring rhythm at a glance.</p></div></div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="chd"><div><h3>Match Outcome Distribution</h3><div class="csub">Home wins vs away wins vs draws — click a slice to cross-filter</div></div></div>
+      <div id="donut"></div>
+    </div>
+    <div class="card">
+      <div class="chd"><div><h3>Goals per Match</h3><div class="csub">How many total goals each fixture produced</div></div></div>
+      <div id="hist"></div>
+    </div>
+  </div>
+
+  <!-- 2. Offensive -->
+  <div class="section-h"><span class="num">2</span><div><h2>Offensive Performance</h2><p>Who is scoring, and does controlling the ball translate into goals?</p></div></div>
+  <div class="grid g3-2">
+    <div class="card">
+      <div class="chd"><div><h3>Top Scoring Teams</h3><div class="csub">Total goals scored · click a bar to focus a team</div></div>
+        <div class="seg" id="scorer-sort"><button data-k="goals" class="on">Goals</button><button data-k="avg">Per match</button></div></div>
+      <div id="scorers"></div>
+    </div>
+    <div class="card">
+      <div class="chd"><div><h3>Possession vs Goals</h3><div class="csub">Each dot = one team in one match</div></div></div>
+      <div id="scatter"></div>
+    </div>
+  </div>
+
+  <!-- 3. Defensive & Tactical -->
+  <div class="section-h"><span class="num">3</span><div><h2>Defensive & Tactical Insights</h2><p>Formation trends and how tactical shape correlates with results.</p></div></div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="chd"><div><h3>Formation Usage</h3><div class="csub">Times each shape was deployed · click to filter</div></div></div>
+      <div id="formations"></div>
+    </div>
+    <div class="card">
+      <div class="chd"><div><h3>Formation Effectiveness</h3><div class="csub">Win rate & goals scored per deployment</div></div></div>
+      <div id="formeff"></div>
+    </div>
+  </div>
+
+  <!-- 4. Discipline -->
+  <div class="section-h"><span class="num">4</span><div><h2>Discipline</h2><p>Cards accumulated by each nation — the tournament's temperament.</p></div></div>
+  <div class="card">
+    <div class="chd"><div><h3>Cards by Team</h3><div class="csub">Yellow &amp; red cards stacked · click a team to filter</div></div>
+      <div class="hint"><span style="color:var(--gold)">■</span> Yellow &nbsp; <span style="color:var(--red)">■</span> Red</div></div>
+    <div id="cards"></div>
+  </div>
+
+  <!-- 5. Attendance -->
+  <div class="section-h"><span class="num">5</span><div><h2>Attendance</h2><p>Where the crowds went — venue-by-venue draw of the group stage.</p></div></div>
+  <div class="card">
+    <div class="chd"><div><h3>Attendance by Venue</h3><div class="csub">Average attendance per venue · click to filter</div></div>
+      <div class="seg" id="att-sort"><button data-k="avg" class="on">Average</button><button data-k="total">Total</button></div></div>
+    <div id="attendance"></div>
+  </div>
+
+  <!-- 6. Match explorer -->
+  <div class="section-h"><span class="num">6</span><div><h2>Match Explorer</h2><p>Every fixture in the current view — sort any column, click a row to drill in.</p></div></div>
+  <div class="card">
+    <div class="table-tools">
+      <input class="search" id="search" placeholder="Search team, venue, referee, manager…" />
+      <span class="hint" id="tbl-count"></span>
+    </div>
+    <div class="tbl-scroll">
+      <table id="mtable">
+        <thead><tr id="thead-row"></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 7. Conclusions -->
+  <div class="section-h"><span class="num">7</span><div><h2>Key Conclusions</h2><p>Automated readout of the current selection.</p></div></div>
+  <div class="insights" id="insights"></div>
+
+  <footer>Vizchitra 2026 · Single visualization created in workshop · Data: FIFA group stage matches · All interactions are client-side</footer>
+</div>
+
+<div id="tip"></div>
+<div class="modal-bg" id="modal-bg"><div class="modal" id="modal"></div></div>
+
+<script>
+const RAW_DATA = [{"id": 0, "gw": 1, "dow": "Thu", "date": "2026-06-11", "time": "13:00", "home": "Mexico", "away": "South Africa", "score": "2–0", "hs": 2, "as": 0, "att": 80824, "venue": "Estadio Banorte, Coyoacán", "ref": "Wilton Sampaio", "hform": "4-1-4-1", "aform": "5-3-2", "hmgr": "Javier Aguirre", "amgr": "Hugo Broos", "hcap": "César Montes", "acap": "Ronwen Williams", "hpos": 61, "apos": 40, "hsot": 4, "asot": 2, "hsh": 16, "ash": 3, "hsv": 2, "asv": 2, "hyc": 1, "ayc": 2, "hrc": 1, "arc": 2, "hfoul": 12, "afoul": 11, "hcor": 3, "acor": 1}, {"id": 1, "gw": 1, "dow": "Thu", "date": "2026-06-11", "time": "20:00", "home": "Korea Republic", "away": "Czechia", "score": "2–1", "hs": 2, "as": 1, "att": 44985, "venue": "Estadio Akron, Zapopan", "ref": "Amin Omar", "hform": "3-4-3", "aform": "3-4-3", "hmgr": "Hong Myung-bo", "amgr": "Miroslav Koubek", "hcap": "Son Heung-min", "acap": "Ladislav Krejčí", "hpos": 62, "apos": 38, "hsot": 6, "asot": 4, "hsh": 15, "ash": 7, "hsv": 3, "asv": 4, "hyc": 1, "ayc": 0, "hrc": 0, "arc": 0, "hfoul": 9, "afoul": 16, "hcor": 4, "acor": 5}, {"id": 2, "gw": 1, "dow": "Fri", "date": "2026-06-12", "time": "15:00", "home": "Canada", "away": "Bosnia & Herz.", "score": "1–1", "hs": 1, "as": 1, "att": 43002, "venue": "BMO Field, Toronto", "ref": "Facundo Tello", "hform": "4-2-2-2", "aform": "4-2-2-2", "hmgr": "Jesse Marsch", "amgr": "Sergej Barbarez", "hcap": "Stephen Eustáquio", "acap": "Sead Kolašinac", "hpos": 61, "apos": 39, "hsot": 4, "asot": 3, "hsh": 13, "ash": 8, "hsv": 2, "asv": 1, "hyc": 2, "ayc": 3, "hrc": 0, "arc": 0, "hfoul": 10, "afoul": 20, "hcor": 9, "acor": 4}, {"id": 3, "gw": 1, "dow": "Fri", "date": "2026-06-12", "time": "18:00", "home": "United States", "away": "Paraguay", "score": "4–1", "hs": 4, "as": 1, "att": 70492, "venue": "SoFi Stadium, Inglewood", "ref": "Danny Makkelie", "hform": "4-2-3-1", "aform": "4-2-2-2", "hmgr": "Mauricio Pochettino", "amgr": "Gustavo Alfaro", "hcap": "Tim Ream", "acap": "Gustavo Gómez", "hpos": 65, "apos": 35, "hsot": 6, "asot": 1, "hsh": 16, "ash": 9, "hsv": 0, "asv": 3, "hyc": 1, "ayc": 5, "hrc": 0, "arc": 0, "hfoul": 13, "afoul": 17, "hcor": 3, "acor": 1}, {"id": 4, "gw": 1, "dow": "Sat", "date": "2026-06-13", "time": "12:00", "home": "Qatar", "away": "Switzerland", "score": "1–1", "hs": 1, "as": 1, "att": 67966, "venue": "Levi's Stadium, Santa Clara", "ref": "Said Martínez", "hform": "4-1-4-1", "aform": "4-2-3-1", "hmgr": "Julen Lopetegui", "amgr": "Murat Yakin", "hcap": "Boualem Khoukhi", "acap": "Granit Xhaka", "hpos": 32, "apos": 68, "hsot": 4, "asot": 7, "hsh": 7, "ash": 26, "hsv": 5, "asv": 3, "hyc": 2, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 12, "afoul": 11, "hcor": 3, "acor": 10}, {"id": 5, "gw": 1, "dow": "Sat", "date": "2026-06-13", "time": "18:00", "home": "Brazil", "away": "Morocco", "score": "1–1", "hs": 1, "as": 1, "att": 80663, "venue": "MetLife Stadium, East Rutherford", "ref": "Slavko Vinčič", "hform": "4-2-2-2", "aform": "4-2-3-1", "hmgr": "Carlo Ancelotti", "amgr": "Mohamed Ouahbi", "hcap": "Marquinhos", "acap": "Achraf Hakimi", "hpos": 51, "apos": 49, "hsot": 5, "asot": 3, "hsh": 12, "ash": 14, "hsv": 2, "asv": 4, "hyc": 2, "ayc": 0, "hrc": 0, "arc": 0, "hfoul": 16, "afoul": 14, "hcor": 6, "acor": 2}, {"id": 6, "gw": 1, "dow": "Sat", "date": "2026-06-13", "time": "21:00", "home": "Australia", "away": "Türkiye", "score": "2–0", "hs": 2, "as": 0, "att": 52497, "venue": "BC Place Stadium, Vancouver", "ref": "Jesús Valenzuela", "hform": "5-4-1", "aform": "4-2-3-1", "hmgr": "Tony Popovic", "amgr": "Vincenzo Montella", "hcap": "Harry Souttar", "acap": "Hakan Çalhanoğlu", "hpos": 28, "apos": 72, "hsot": 4, "asot": 8, "hsh": 9, "ash": 30, "hsv": 8, "asv": 2, "hyc": 0, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 12, "afoul": 4, "hcor": 5, "acor": 8}, {"id": 7, "gw": 1, "dow": "Sat", "date": "2026-06-13", "time": "21:00", "home": "Haiti", "away": "Scotland", "score": "0–1", "hs": 0, "as": 1, "att": 64146, "venue": "Gillette Stadium, Foxborough", "ref": "Mustapha Ghorbal", "hform": "4-2-2-2", "aform": "4-2-2-2", "hmgr": "Sébastien Migné", "amgr": "Steve Clarke", "hcap": "Johny Placide", "acap": "Andy Robertson", "hpos": 54, "apos": 46, "hsot": 2, "asot": 2, "hsh": 15, "ash": 9, "hsv": 1, "asv": 2, "hyc": 1, "ayc": 3, "hrc": 0, "arc": 0, "hfoul": 23, "afoul": 21, "hcor": 4, "acor": 3}, {"id": 8, "gw": 1, "dow": "Sun", "date": "2026-06-14", "time": "12:00", "home": "Germany", "away": "Curaçao", "score": "7–1", "hs": 7, "as": 1, "att": 68021, "venue": "Reliant Stadium, Houston", "ref": "Jalal Jiyed", "hform": "4-2-3-1", "aform": "4-3-1-2", "hmgr": "Julian Nagelsmann", "amgr": "Dick Advocaat", "hcap": "Joshua Kimmich", "acap": "Leandro Bacuna", "hpos": 65, "apos": 35, "hsot": 12, "asot": 2, "hsh": 26, "ash": 8, "hsv": 1, "asv": 4, "hyc": 0, "ayc": 0, "hrc": 0, "arc": 0, "hfoul": 18, "afoul": 11, "hcor": 8, "acor": 1}, {"id": 9, "gw": 1, "dow": "Sun", "date": "2026-06-14", "time": "15:00", "home": "Netherlands", "away": "Japan", "score": "2–2", "hs": 2, "as": 2, "att": 69285, "venue": "AT&T Stadium, Arlington", "ref": "Ismail Elfath", "hform": "4-1-4-1", "aform": "3-4-3", "hmgr": "Ronald Koeman", "amgr": "Hajime Moriyasu", "hcap": "Virgil van Dijk", "acap": "Ritsu Doan", "hpos": 60, "apos": 40, "hsot": 6, "asot": 3, "hsh": 10, "ash": 10, "hsv": 1, "asv": 4, "hyc": 3, "ayc": 0, "hrc": 0, "arc": 0, "hfoul": 7, "afoul": 7, "hcor": 5, "acor": 4}, {"id": 10, "gw": 1, "dow": "Sun", "date": "2026-06-14", "time": "19:00", "home": "Côte d'Ivoire", "away": "Ecuador", "score": "1–0", "hs": 1, "as": 0, "att": 68274, "venue": "Lincoln Financial Field, Philadelphia", "ref": "François Letexier", "hform": "4-2-2-2", "aform": "4-2-2-2", "hmgr": "Emerse Faé", "amgr": "Sebastián Becaccece", "hcap": "Franck Kessié", "acap": "Enner Valencia", "hpos": 48, "apos": 52, "hsot": 4, "asot": 1, "hsh": 15, "ash": 12, "hsv": 1, "asv": 3, "hyc": 3, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 10, "afoul": 13, "hcor": 3, "acor": 5}, {"id": 11, "gw": 1, "dow": "Sun", "date": "2026-06-14", "time": "20:00", "home": "Sweden", "away": "Tunisia", "score": "5–1", "hs": 5, "as": 1, "att": 50987, "venue": "Estadio BBVA Bancomer, Guadalupe", "ref": "Yael Falcón", "hform": "3-4-1-2", "aform": "5-3-2", "hmgr": "Graham Potter", "amgr": "Sabri Lamouchi", "hcap": "Victor Lindelöf", "acap": "Ellyes Skhiri", "hpos": 49, "apos": 51, "hsot": 7, "asot": 2, "hsh": 13, "ash": 6, "hsv": 1, "asv": 1, "hyc": 0, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 10, "afoul": 8, "hcor": 4, "acor": 2}, {"id": 12, "gw": 1, "dow": "Mon", "date": "2026-06-15", "time": "12:00", "home": "Belgium", "away": "Egypt", "score": "1–1", "hs": 1, "as": 1, "att": 66775, "venue": "Lumen Field, Seattle", "ref": "Ramon Abatti", "hform": "4-2-3-1", "aform": "4-2-3-1", "hmgr": "Rudi Garcia", "amgr": "Hossam Hassan", "hcap": "Youri Tielemans", "acap": "Mohamed Salah", "hpos": 54, "apos": 46, "hsot": 3, "asot": 3, "hsh": 15, "ash": 14, "hsv": 2, "asv": 3, "hyc": 2, "ayc": 2, "hrc": 0, "arc": 0, "hfoul": 15, "afoul": 15, "hcor": 2, "acor": 7}, {"id": 13, "gw": 1, "dow": "Mon", "date": "2026-06-15", "time": "12:00", "home": "Spain", "away": "Cabo Verde", "score": "0–0", "hs": 0, "as": 0, "att": 67640, "venue": "Mercedes-Benz Stadium, Atlanta", "ref": "Adham Makhadmeh", "hform": "4-1-4-1", "aform": "4-1-4-1", "hmgr": "Luis de la Fuente", "amgr": "Bubista", "hcap": "Rodri", "acap": "Ryan Mendes", "hpos": 74, "apos": 26, "hsot": 7, "asot": 1, "hsh": 27, "ash": 6, "hsv": 1, "asv": 7, "hyc": 1, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 10, "afoul": 1, "hcor": 11, "acor": 1}, {"id": 14, "gw": 1, "dow": "Mon", "date": "2026-06-15", "time": "18:00", "home": "Saudi Arabia", "away": "Uruguay", "score": "1–1", "hs": 1, "as": 1, "att": 62764, "venue": "Hard Rock Stadium, Miami Gardens", "ref": "Maurizio Mariani", "hform": "4-2-2-2", "aform": "4-2-2-2", "hmgr": "Georgios Donis", "amgr": "Marcelo Bielsa", "hcap": "Salem Al-Dawsari", "acap": "Federico Valverde", "hpos": 33, "apos": 67, "hsot": 3, "asot": 10, "hsh": 7, "ash": 27, "hsv": 9, "asv": 2, "hyc": 1, "ayc": 0, "hrc": 0, "arc": 0, "hfoul": 11, "afoul": 6, "hcor": 4, "acor": 14}, {"id": 15, "gw": 1, "dow": "Mon", "date": "2026-06-15", "time": "18:00", "home": "IR Iran", "away": "New Zealand", "score": "2–2", "hs": 2, "as": 2, "att": 70108, "venue": "SoFi Stadium, Inglewood", "ref": "César Arturo Ramos", "hform": "4-2-2-2", "aform": "4-2-3-1", "hmgr": "Amir Ghalehnoy", "amgr": "Darren Bazeley", "hcap": "Mehdi Taremi", "acap": "Chris Wood", "hpos": 48, "apos": 52, "hsot": 4, "asot": 8, "hsh": 17, "ash": 14, "hsv": 6, "asv": 2, "hyc": 1, "ayc": 0, "hrc": 0, "arc": 0, "hfoul": 10, "afoul": 8, "hcor": 4, "acor": 1}, {"id": 16, "gw": 1, "dow": "Tue", "date": "2026-06-16", "time": "15:00", "home": "France", "away": "Senegal", "score": "3–1", "hs": 3, "as": 1, "att": 80545, "venue": "MetLife Stadium, East Rutherford", "ref": "Alireza Faghani", "hform": "4-2-3-1", "aform": "4-2-3-1", "hmgr": "Didier Deschamps", "amgr": "Pape Thiaw", "hcap": "Kylian Mbappé", "acap": "Kalidou Koulibaly", "hpos": 54, "apos": 46, "hsot": 8, "asot": 2, "hsh": 11, "ash": 6, "hsv": 2, "asv": 5, "hyc": 0, "ayc": 0, "hrc": 0, "arc": 0, "hfoul": 5, "afoul": 9, "hcor": 6, "acor": 4}, {"id": 17, "gw": 1, "dow": "Tue", "date": "2026-06-16", "time": "18:00", "home": "Iraq", "away": "Norway", "score": "1–4", "hs": 1, "as": 4, "att": 63106, "venue": "Gillette Stadium, Foxborough", "ref": "Pierre Ghislain Atcho", "hform": "4-2-2-2", "aform": "4-1-4-1", "hmgr": "Graham Arnold", "amgr": "Ståle Solbakken", "hcap": "Jalal Hassan", "acap": "Martin Ødegaard", "hpos": 39, "apos": 61, "hsot": 1, "asot": 5, "hsh": 11, "ash": 12, "hsv": 2, "asv": 0, "hyc": 1, "ayc": 0, "hrc": 0, "arc": 0, "hfoul": 12, "afoul": 13, "hcor": 2, "acor": 5}, {"id": 18, "gw": 1, "dow": "Tue", "date": "2026-06-16", "time": "20:00", "home": "Argentina", "away": "Algeria", "score": "3–0", "hs": 3, "as": 0, "att": 69045, "venue": "GEHA Field at Arrowhead Stadium, Kansas City", "ref": "Szymon Marciniak", "hform": "4-2-2-2", "aform": "4-2-3-1", "hmgr": "Lionel Scaloni", "amgr": "Vladimir Petković", "hcap": "Lionel Messi", "acap": "Aïssa Mandi", "hpos": 48, "apos": 52, "hsot": 6, "asot": 0, "hsh": 10, "ash": 7, "hsv": 0, "asv": 3, "hyc": 0, "ayc": 0, "hrc": 0, "arc": 0, "hfoul": 13, "afoul": 8, "hcor": 2, "acor": 2}, {"id": 19, "gw": 1, "dow": "Tue", "date": "2026-06-16", "time": "21:00", "home": "Austria", "away": "Jordan", "score": "3–1", "hs": 3, "as": 1, "att": 68527, "venue": "Levi's Stadium, Santa Clara", "ref": "Dahane Beida", "hform": "4-2-3-1", "aform": "5-4-1", "hmgr": "Ralf Rangnick", "amgr": "Jamal Sellami", "hcap": "David Alaba", "acap": "Ihsan Haddad", "hpos": 63, "apos": 37, "hsot": 4, "asot": 4, "hsh": 11, "ash": 11, "hsv": 3, "asv": 1, "hyc": 1, "ayc": 0, "hrc": 0, "arc": 0, "hfoul": 12, "afoul": 7, "hcor": 4, "acor": 3}, {"id": 20, "gw": 1, "dow": "Wed", "date": "2026-06-17", "time": "12:00", "home": "Portugal", "away": "Congo DR", "score": "1–1", "hs": 1, "as": 1, "att": 68777, "venue": "Reliant Stadium, Houston", "ref": "Abdulrahman Ibrahim Al Jassim", "hform": "4-2-3-1", "aform": "5-3-2", "hmgr": "Roberto Martínez", "amgr": "Sébastien Desabre", "hcap": "Cristiano Ronaldo", "acap": "Chancel Mbemba", "hpos": 75, "apos": 25, "hsot": 1, "asot": 2, "hsh": 7, "ash": 8, "hsv": 1, "asv": 0, "hyc": 3, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 9, "afoul": 10, "hcor": 5, "acor": 4}, {"id": 21, "gw": 1, "dow": "Wed", "date": "2026-06-17", "time": "15:00", "home": "England", "away": "Croatia", "score": "4–2", "hs": 4, "as": 2, "att": 70389, "venue": "AT&T Stadium, Arlington", "ref": "Clément Turpin", "hform": "4-2-3-1", "aform": "3-4-3", "hmgr": "Thomas Tuchel", "amgr": "Zlatko Dalić", "hcap": "Harry Kane", "acap": "Luka Modrić", "hpos": 52, "apos": 48, "hsot": 11, "asot": 5, "hsh": 22, "ash": 10, "hsv": 3, "asv": 7, "hyc": 0, "ayc": 0, "hrc": 0, "arc": 0, "hfoul": 10, "afoul": 12, "hcor": 8, "acor": 2}, {"id": 22, "gw": 1, "dow": "Wed", "date": "2026-06-17", "time": "19:00", "home": "Ghana", "away": "Panama", "score": "1–0", "hs": 1, "as": 0, "att": 42942, "venue": "BMO Field, Toronto", "ref": "Glenn Nyberg", "hform": "4-2-3-1", "aform": "3-4-3", "hmgr": "Carlos Queiroz", "amgr": "Thomas Christiansen", "hcap": "Jordan Ayew", "acap": "Yoel Bárcenas", "hpos": 38, "apos": 62, "hsot": 2, "asot": 4, "hsh": 8, "ash": 11, "hsv": 4, "asv": 2, "hyc": 1, "ayc": 2, "hrc": 0, "arc": 0, "hfoul": 9, "afoul": 11, "hcor": 2, "acor": 2}, {"id": 23, "gw": 1, "dow": "Wed", "date": "2026-06-17", "time": "20:00", "home": "Uzbekistan", "away": "Colombia", "score": "1–3", "hs": 1, "as": 3, "att": 80824, "venue": "Estadio Banorte, Coyoacán", "ref": "Anthony Taylor", "hform": "5-4-1", "aform": "4-1-4-1", "hmgr": "Fabio Cannavaro", "amgr": "Néstor Lorenzo", "hcap": "Eldor Shomurodov", "acap": "James Rodríguez", "hpos": 39, "apos": 62, "hsot": 2, "asot": 4, "hsh": 8, "ash": 15, "hsv": 1, "asv": 1, "hyc": 1, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 14, "afoul": 11, "hcor": 3, "acor": 4}, {"id": 24, "gw": 2, "dow": "Thu", "date": "2026-06-18", "time": "12:00", "home": "Switzerland", "away": "Bosnia & Herz.", "score": "4–1", "hs": 4, "as": 1, "att": 70026, "venue": "SoFi Stadium, Inglewood", "ref": "João Pinheiro", "hform": "4-1-4-1", "aform": "4-2-2-2", "hmgr": "Murat Yakin", "amgr": "Sergej Barbarez", "hcap": "Granit Xhaka", "acap": "Edin Džeko", "hpos": 62, "apos": 38, "hsot": 7, "asot": 3, "hsh": 13, "ash": 5, "hsv": 2, "asv": 3, "hyc": 1, "ayc": 2, "hrc": 0, "arc": 1, "hfoul": 7, "afoul": 18, "hcor": 7, "acor": 3}, {"id": 25, "gw": 2, "dow": "Thu", "date": "2026-06-18", "time": "12:00", "home": "Czechia", "away": "South Africa", "score": "1–1", "hs": 1, "as": 1, "att": 67442, "venue": "Mercedes-Benz Stadium, Atlanta", "ref": "Tori Penso", "hform": "5-3-2", "aform": "4-1-4-1", "hmgr": "Miroslav Koubek", "amgr": "Hugo Broos", "hcap": "Ladislav Krejčí", "acap": "Ronwen Williams", "hpos": 38, "apos": 62, "hsot": 3, "asot": 4, "hsh": 14, "ash": 17, "hsv": 3, "asv": 2, "hyc": 1, "ayc": 2, "hrc": 0, "arc": 0, "hfoul": 12, "afoul": 10, "hcor": 5, "acor": 5}, {"id": 26, "gw": 2, "dow": "Thu", "date": "2026-06-18", "time": "15:00", "home": "Canada", "away": "Qatar", "score": "6–0", "hs": 6, "as": 0, "att": 52497, "venue": "BC Place Stadium, Vancouver", "ref": "Cristián Garay", "hform": "4-2-2-2", "aform": "4-3-2-1", "hmgr": "Jesse Marsch", "amgr": "Julen Lopetegui", "hcap": "Stephen Eustáquio", "acap": "Boualem Khoukhi", "hpos": 79, "apos": 21, "hsot": 10, "asot": 0, "hsh": 32, "ash": 2, "hsv": 0, "asv": 4, "hyc": 1, "ayc": 1, "hrc": 0, "arc": 2, "hfoul": 9, "afoul": 10, "hcor": 19, "acor": 1}, {"id": 27, "gw": 2, "dow": "Thu", "date": "2026-06-18", "time": "19:00", "home": "Mexico", "away": "Korea Republic", "score": "1–0", "hs": 1, "as": 0, "att": 45522, "venue": "Estadio Akron, Zapopan", "ref": "Gustavo Tejera", "hform": "4-1-4-1", "aform": "3-4-3", "hmgr": "Javier Aguirre", "amgr": "Hong Myung-bo", "hcap": "Edson Álvarez", "acap": "Son Heung-min", "hpos": 42, "apos": 58, "hsot": 4, "asot": 2, "hsh": 8, "ash": 9, "hsv": 2, "asv": 3, "hyc": 0, "ayc": 2, "hrc": 0, "arc": 0, "hfoul": 9, "afoul": 7, "hcor": 0, "acor": 2}, {"id": 28, "gw": 2, "dow": "Fri", "date": "2026-06-19", "time": "12:00", "home": "United States", "away": "Australia", "score": "2–0", "hs": 2, "as": 0, "att": 66925, "venue": "Lumen Field, Seattle", "ref": "Felix Zwayer", "hform": "3-5-2", "aform": "5-4-1", "hmgr": "Mauricio Pochettino", "amgr": "Tony Popovic", "hcap": "Tim Ream", "acap": "Harry Souttar", "hpos": 62, "apos": 38, "hsot": 2, "asot": 2, "hsh": 10, "ash": 5, "hsv": 2, "asv": 1, "hyc": 3, "ayc": 4, "hrc": 0, "arc": 0, "hfoul": 12, "afoul": 16, "hcor": 7, "acor": 4}, {"id": 29, "gw": 2, "dow": "Fri", "date": "2026-06-19", "time": "18:00", "home": "Scotland", "away": "Morocco", "score": "0–1", "hs": 0, "as": 1, "att": 64146, "venue": "Gillette Stadium, Foxborough", "ref": "Ilgiz Tantashev", "hform": "4-1-4-1", "aform": "4-2-3-1", "hmgr": "Steve Clarke", "amgr": "Mohamed Ouahbi", "hcap": "Andy Robertson", "acap": "Achraf Hakimi", "hpos": 41, "apos": 59, "hsot": 0, "asot": 2, "hsh": 6, "ash": 12, "hsv": 1, "asv": 0, "hyc": 1, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 11, "afoul": 8, "hcor": 2, "acor": 5}, {"id": 30, "gw": 2, "dow": "Fri", "date": "2026-06-19", "time": "20:00", "home": "Türkiye", "away": "Paraguay", "score": "0–1", "hs": 0, "as": 1, "att": 68827, "venue": "Levi's Stadium, Santa Clara", "ref": "Iván Barton", "hform": "4-2-3-1", "aform": "4-2-2-2", "hmgr": "Vincenzo Montella", "amgr": "Gustavo Alfaro", "hcap": "Hakan Çalhanoğlu", "acap": "Gustavo Gómez", "hpos": 79, "apos": 22, "hsot": 5, "asot": 2, "hsh": 32, "ash": 7, "hsv": 1, "asv": 5, "hyc": 2, "ayc": 1, "hrc": 0, "arc": 1, "hfoul": 14, "afoul": 15, "hcor": 12, "acor": 0}, {"id": 31, "gw": 2, "dow": "Fri", "date": "2026-06-19", "time": "20:30", "home": "Brazil", "away": "Haiti", "score": "3–0", "hs": 3, "as": 0, "att": 68324, "venue": "Lincoln Financial Field, Philadelphia", "ref": "Alejandro Hernández", "hform": "4-1-4-1", "aform": "3-4-3", "hmgr": "Carlo Ancelotti", "amgr": "Sébastien Migné", "hcap": "Marquinhos", "acap": "Johny Placide", "hpos": 57, "apos": 43, "hsot": 5, "asot": 3, "hsh": 8, "ash": 7, "hsv": 3, "asv": 2, "hyc": 1, "ayc": 3, "hrc": 0, "arc": 0, "hfoul": 13, "afoul": 14, "hcor": 4, "acor": 4}, {"id": 32, "gw": 2, "dow": "Sat", "date": "2026-06-20", "time": "12:00", "home": "Netherlands", "away": "Sweden", "score": "5–1", "hs": 5, "as": 1, "att": 68777, "venue": "Reliant Stadium, Houston", "ref": "Michael Oliver", "hform": "4-1-4-1", "aform": "3-1-4-2", "hmgr": "Ronald Koeman", "amgr": "Graham Potter", "hcap": "Virgil van Dijk", "acap": "Victor Lindelöf", "hpos": 51, "apos": 49, "hsot": 7, "asot": 8, "hsh": 10, "ash": 16, "hsv": 7, "asv": 2, "hyc": 0, "ayc": 3, "hrc": 0, "arc": 0, "hfoul": 9, "afoul": 12, "hcor": 2, "acor": 5}, {"id": 33, "gw": 2, "dow": "Sat", "date": "2026-06-20", "time": "16:00", "home": "Germany", "away": "Côte d'Ivoire", "score": "2–1", "hs": 2, "as": 1, "att": 43036, "venue": "BMO Field, Toronto", "ref": "Juan Gabriel Benítez", "hform": "4-2-3-1", "aform": "4-1-4-1", "hmgr": "Julian Nagelsmann", "amgr": "Emerse Faé", "hcap": "Joshua Kimmich", "acap": "Franck Kessié", "hpos": 59, "apos": 41, "hsot": 7, "asot": 2, "hsh": 16, "ash": 9, "hsv": 1, "asv": 5, "hyc": 0, "ayc": 0, "hrc": 0, "arc": 0, "hfoul": 5, "afoul": 7, "hcor": 8, "acor": 3}, {"id": 34, "gw": 2, "dow": "Sat", "date": "2026-06-20", "time": "19:00", "home": "Ecuador", "away": "Curaçao", "score": "0–0", "hs": 0, "as": 0, "att": 68598, "venue": "GEHA Field at Arrowhead Stadium, Kansas City", "ref": "Ma Ning", "hform": "3-1-4-2", "aform": "5-4-1", "hmgr": "Sebastián Becaccece", "amgr": "Dick Advocaat", "hcap": "Enner Valencia", "acap": "Leandro Bacuna", "hpos": 75, "apos": 25, "hsot": 15, "asot": 3, "hsh": 27, "ash": 10, "hsv": 3, "asv": 15, "hyc": 1, "ayc": 5, "hrc": 0, "arc": 0, "hfoul": 7, "afoul": 10, "hcor": 9, "acor": 0}, {"id": 35, "gw": 2, "dow": "Sat", "date": "2026-06-20", "time": "22:00", "home": "Tunisia", "away": "Japan", "score": "0–4", "hs": 0, "as": 4, "att": 51243, "venue": "Estadio BBVA, Guadalupe", "ref": "István Kovács", "hform": "5-4-1", "aform": "3-4-3", "hmgr": "Hervé Renard", "amgr": "Hajime Moriyasu", "hcap": "Ellyes Skhiri", "acap": "Ko Itakura", "hpos": 38, "apos": 62, "hsot": 0, "asot": 5, "hsh": 2, "ash": 11, "hsv": 1, "asv": 0, "hyc": 0, "ayc": 0, "hrc": 0, "arc": 0, "hfoul": 8, "afoul": 15, "hcor": 3, "acor": 5}, {"id": 36, "gw": 2, "dow": "Sun", "date": "2026-06-21", "time": "12:00", "home": "Belgium", "away": "IR Iran", "score": "0–0", "hs": 0, "as": 0, "att": 70317, "venue": "SoFi Stadium, Inglewood", "ref": "Darío Herrera", "hform": "4-2-3-1", "aform": "5-4-1", "hmgr": "Rudi Garcia", "amgr": "Amir Ghalehnoy", "hcap": "Youri Tielemans", "acap": "Ehsan Hajsafi", "hpos": 70, "apos": 30, "hsot": 7, "asot": 3, "hsh": 23, "ash": 7, "hsv": 3, "asv": 7, "hyc": 1, "ayc": 1, "hrc": 1, "arc": 0, "hfoul": 7, "afoul": 9, "hcor": 4, "acor": 2}, {"id": 37, "gw": 2, "dow": "Sun", "date": "2026-06-21", "time": "12:00", "home": "Spain", "away": "Saudi Arabia", "score": "4–0", "hs": 4, "as": 0, "att": 68239, "venue": "Mercedes-Benz Stadium, Atlanta", "ref": "Raphael Claus", "hform": "4-1-4-1", "aform": "5-4-1", "hmgr": "Luis de la Fuente", "amgr": "Georgios Donis", "hcap": "Rodri", "acap": "Salem Al-Dawsari", "hpos": 67, "apos": 33, "hsot": 8, "asot": 1, "hsh": 22, "ash": 3, "hsv": 1, "asv": 5, "hyc": 0, "ayc": 2, "hrc": 0, "arc": 0, "hfoul": 10, "afoul": 2, "hcor": 6, "acor": 1}, {"id": 38, "gw": 2, "dow": "Sun", "date": "2026-06-21", "time": "18:00", "home": "Uruguay", "away": "Cabo Verde", "score": "2–2", "hs": 2, "as": 2, "att": 64003, "venue": "Hard Rock Stadium, Miami Gardens", "ref": "Espen Eskås", "hform": "4-1-4-1", "aform": "4-1-4-1", "hmgr": "Marcelo Bielsa", "amgr": "Bubista", "hcap": "Federico Valverde", "acap": "Ryan Mendes", "hpos": 65, "apos": 35, "hsot": 2, "asot": 4, "hsh": 17, "ash": 12, "hsv": 2, "asv": 0, "hyc": 2, "ayc": 2, "hrc": 0, "arc": 0, "hfoul": 11, "afoul": 4, "hcor": 11, "acor": 4}, {"id": 39, "gw": 2, "dow": "Sun", "date": "2026-06-21", "time": "18:00", "home": "New Zealand", "away": "Egypt", "score": "1–3", "hs": 1, "as": 3, "att": 52497, "venue": "BC Place Stadium, Vancouver", "ref": "Omar Mohamed Al Ali", "hform": "4-2-3-1", "aform": "4-2-2-2", "hmgr": "Darren Bazeley", "amgr": "Hossam Hassan", "hcap": "Chris Wood", "acap": "Mohamed Salah", "hpos": 44, "apos": 56, "hsot": 5, "asot": 7, "hsh": 11, "ash": 19, "hsv": 4, "asv": 4, "hyc": 2, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 14, "afoul": 8, "hcor": 4, "acor": 3}, {"id": 40, "gw": 2, "dow": "Mon", "date": "2026-06-22", "time": "12:00", "home": "Argentina", "away": "Austria", "score": "2–0", "hs": 2, "as": 0, "att": 70649, "venue": "AT&T Stadium, Arlington", "ref": "Amin Omar", "hform": "4-2-2-2", "aform": "4-2-3-1", "hmgr": "Lionel Scaloni", "amgr": "Ralf Rangnick", "hcap": "Lionel Messi", "acap": "David Alaba", "hpos": 54, "apos": 46, "hsot": 5, "asot": 1, "hsh": 12, "ash": 6, "hsv": 1, "asv": 2, "hyc": 2, "ayc": 2, "hrc": 0, "arc": 0, "hfoul": 13, "afoul": 13, "hcor": 1, "acor": 3}, {"id": 41, "gw": 2, "dow": "Mon", "date": "2026-06-22", "time": "17:00", "home": "France", "away": "Iraq", "score": "3–0", "hs": 3, "as": 0, "att": 68324, "venue": "Lincoln Financial Field, Philadelphia", "ref": "Drew Fischer", "hform": "4-2-3-1", "aform": "4-1-4-1", "hmgr": "Didier Deschamps", "amgr": "Graham Arnold", "hcap": "Kylian Mbappé", "acap": "Ayman Hussein", "hpos": 56, "apos": 45, "hsot": 5, "asot": 0, "hsh": 19, "ash": 4, "hsv": 0, "asv": 2, "hyc": 0, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 8, "afoul": 4, "hcor": 4, "acor": 2}, {"id": 42, "gw": 2, "dow": "Mon", "date": "2026-06-22", "time": "20:00", "home": "Norway", "away": "Senegal", "score": "3–2", "hs": 3, "as": 2, "att": 80663, "venue": "MetLife Stadium, East Rutherford", "ref": "Wilton Sampaio", "hform": "4-1-4-1", "aform": "4-2-3-1", "hmgr": "Ståle Solbakken", "amgr": "Pape Thiaw", "hcap": "Martin Ødegaard", "acap": "Kalidou Koulibaly", "hpos": 42, "apos": 58, "hsot": 7, "asot": 4, "hsh": 13, "ash": 16, "hsv": 2, "asv": 3, "hyc": 0, "ayc": 0, "hrc": 0, "arc": 0, "hfoul": 13, "afoul": 5, "hcor": 5, "acor": 4}, {"id": 43, "gw": 2, "dow": "Mon", "date": "2026-06-22", "time": "20:00", "home": "Jordan", "away": "Algeria", "score": "1–2", "hs": 1, "as": 2, "att": 68371, "venue": "Levi's Stadium, Santa Clara", "ref": "Slavko Vinčič", "hform": "5-4-1", "aform": "4-2-3-1", "hmgr": "Jamal Sellami", "amgr": "Vladimir Petković", "hcap": "Ihsan Haddad", "acap": "Riyad Mahrez", "hpos": 28, "apos": 72, "hsot": 4, "asot": 8, "hsh": 8, "ash": 17, "hsv": 6, "asv": 3, "hyc": 1, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 11, "afoul": 6, "hcor": 1, "acor": 10}, {"id": 44, "gw": 2, "dow": "Tue", "date": "2026-06-23", "time": "12:00", "home": "Portugal", "away": "Uzbekistan", "score": "5–0", "hs": 5, "as": 0, "att": 68777, "venue": "Reliant Stadium, Houston", "ref": "Jalal Jayed", "hform": "4-2-3-1", "aform": "5-4-1", "hmgr": "Roberto Martínez", "amgr": "Fabio Cannavaro", "hcap": "Cristiano Ronaldo", "acap": "Eldor Shomurodov", "hpos": 66, "apos": 34, "hsot": 9, "asot": 2, "hsh": 17, "ash": 7, "hsv": 2, "asv": 4, "hyc": 1, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 14, "afoul": 15, "hcor": 3, "acor": 2}, {"id": 45, "gw": 2, "dow": "Tue", "date": "2026-06-23", "time": "16:00", "home": "England", "away": "Ghana", "score": "0–0", "hs": 0, "as": 0, "att": 63983, "venue": "Gillette Stadium, Foxborough", "ref": "Said Martínez", "hform": "4-2-3-1", "aform": "4-1-4-1", "hmgr": "Thomas Tuchel", "amgr": "Carlos Queiroz", "hcap": "Harry Kane", "acap": "Jordan Ayew", "hpos": 79, "apos": 21, "hsot": 3, "asot": 1, "hsh": 19, "ash": 2, "hsv": 0, "asv": 3, "hyc": 1, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 14, "afoul": 24, "hcor": 9, "acor": 2}, {"id": 46, "gw": 2, "dow": "Tue", "date": "2026-06-23", "time": "19:00", "home": "Panama", "away": "Croatia", "score": "0–1", "hs": 0, "as": 1, "att": 43036, "venue": "BMO Field, Toronto", "ref": "Pierre Ghislain Atcho", "hform": "5-4-1", "aform": "4-2-3-1", "hmgr": "Thomas Christiansen", "amgr": "Zlatko Dalić", "hcap": "Yoel Bárcenas", "acap": "Luka Modrić", "hpos": 42, "apos": 58, "hsot": 1, "asot": 2, "hsh": 8, "ash": 6, "hsv": 1, "asv": 1, "hyc": 1, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 19, "afoul": 12, "hcor": 7, "acor": 2}, {"id": 47, "gw": 2, "dow": "Tue", "date": "2026-06-23", "time": "20:00", "home": "Colombia", "away": "Congo DR", "score": "1–0", "hs": 1, "as": 0, "att": 45358, "venue": "Estadio Akron, Zapopan", "ref": "Maurizio Mariani", "hform": "4-1-4-1", "aform": "5-3-2", "hmgr": "Néstor Lorenzo", "amgr": "Sébastien Desabre", "hcap": "James Rodríguez", "acap": "Chancel Mbemba", "hpos": 64, "apos": 37, "hsot": 9, "asot": 1, "hsh": 20, "ash": 7, "hsv": 1, "asv": 8, "hyc": 2, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 12, "afoul": 16, "hcor": 5, "acor": 4}, {"id": 48, "gw": 3, "dow": "Wed", "date": "2026-06-24", "time": "12:00", "home": "Bosnia & Herz.", "away": "Qatar", "score": "3–1", "hs": 3, "as": 1, "att": 66925, "venue": "Lumen Field, Seattle", "ref": "Jesús Valenzuela", "hform": "4-2-2-2", "aform": "4-3-2-1", "hmgr": "Sergej Barbarez", "amgr": "Julen Lopetegui", "hcap": "Edin Džeko", "acap": "Hassan Al-Haydos", "hpos": 55, "apos": 46, "hsot": 5, "asot": 3, "hsh": 14, "ash": 9, "hsv": 2, "asv": 3, "hyc": 1, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 9, "afoul": 14, "hcor": 5, "acor": 5}, {"id": 49, "gw": 3, "dow": "Wed", "date": "2026-06-24", "time": "12:00", "home": "Switzerland", "away": "Canada", "score": "2–1", "hs": 2, "as": 1, "att": 52497, "venue": "BC Place Stadium, Vancouver", "ref": "Ramon Abatti", "hform": "4-2-2-2", "aform": "4-2-2-2", "hmgr": "Murat Yakin", "amgr": "Jesse Marsch", "hcap": "Granit Xhaka", "acap": "Jonathan David", "hpos": 55, "apos": 45, "hsot": 4, "asot": 7, "hsh": 6, "ash": 13, "hsv": 6, "asv": 2, "hyc": 1, "ayc": 2, "hrc": 0, "arc": 0, "hfoul": 19, "afoul": 13, "hcor": 2, "acor": 7}, {"id": 50, "gw": 3, "dow": "Wed", "date": "2026-06-24", "time": "18:00", "home": "Morocco", "away": "Haiti", "score": "4–2", "hs": 4, "as": 2, "att": 68239, "venue": "Mercedes-Benz Stadium, Atlanta", "ref": "Danny Makkelie", "hform": "4-2-2-2", "aform": "4-2-2-2", "hmgr": "Mohamed Ouahbi", "amgr": "Sébastien Migné", "hcap": "Achraf Hakimi", "acap": "Johny Placide", "hpos": 69, "apos": 31, "hsot": 11, "asot": 2, "hsh": 22, "ash": 9, "hsv": 1, "asv": 8, "hyc": 0, "ayc": 3, "hrc": 0, "arc": 0, "hfoul": 10, "afoul": 18, "hcor": 9, "acor": 1}, {"id": 51, "gw": 3, "dow": "Wed", "date": "2026-06-24", "time": "18:00", "home": "Scotland", "away": "Brazil", "score": "0–3", "hs": 0, "as": 3, "att": 64478, "venue": "Hard Rock Stadium, Miami Gardens", "ref": "César Arturo Ramos", "hform": "4-2-3-1", "aform": "4-1-4-1", "hmgr": "Steve Clarke", "amgr": "Carlo Ancelotti", "hcap": "Andy Robertson", "acap": "Marquinhos", "hpos": 46, "apos": 54, "hsot": 5, "asot": 9, "hsh": 14, "ash": 21, "hsv": 5, "asv": 5, "hyc": 1, "ayc": 2, "hrc": 0, "arc": 0, "hfoul": 10, "afoul": 11, "hcor": 7, "acor": 6}, {"id": 52, "gw": 3, "dow": "Wed", "date": "2026-06-24", "time": "19:00", "home": "Czechia", "away": "Mexico", "score": "0–3", "hs": 0, "as": 3, "att": 80824, "venue": "Estadio Banorte, Coyoacán", "ref": "Yael Falcón", "hform": "3-4-3", "aform": "4-1-4-1", "hmgr": "Miroslav Koubek", "amgr": "Javier Aguirre", "hcap": "Ladislav Krejčí", "acap": "Edson Álvarez", "hpos": 52, "apos": 48, "hsot": 1, "asot": 5, "hsh": 13, "ash": 11, "hsv": 2, "asv": 1, "hyc": 0, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 9, "afoul": 13, "hcor": 5, "acor": 1}, {"id": 53, "gw": 3, "dow": "Wed", "date": "2026-06-24", "time": "19:00", "home": "South Africa", "away": "Korea Republic", "score": "1–0", "hs": 1, "as": 0, "att": 51243, "venue": "Estadio BBVA, Guadalupe", "ref": "Facundo Tello", "hform": "4-2-3-1", "aform": "3-4-3", "hmgr": "Hugo Broos", "amgr": "Hong Myung-bo", "hcap": "Ronwen Williams", "acap": "Kim Min-jae", "hpos": 32, "apos": 69, "hsot": 4, "asot": 3, "hsh": 13, "ash": 8, "hsv": 2, "asv": 3, "hyc": 1, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 7, "afoul": 9, "hcor": 4, "acor": 6}, {"id": 54, "gw": 3, "dow": "Thu", "date": "2026-06-25", "time": "16:00", "home": "Ecuador", "away": "Germany", "score": "2–1", "hs": 2, "as": 1, "att": 80663, "venue": "MetLife Stadium, East Rutherford", "ref": "Tori Penso", "hform": "4-2-2-2", "aform": "4-2-3-1", "hmgr": "Sebastián Becaccece", "amgr": "Julian Nagelsmann", "hcap": "Moisés Caicedo", "acap": "Joshua Kimmich", "hpos": 39, "apos": 61, "hsot": 3, "asot": 3, "hsh": 7, "ash": 11, "hsv": 2, "asv": 1, "hyc": 3, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 15, "afoul": 10, "hcor": 3, "acor": 2}, {"id": 55, "gw": 3, "dow": "Thu", "date": "2026-06-25", "time": "16:00", "home": "Curaçao", "away": "Côte d'Ivoire", "score": "0–2", "hs": 0, "as": 2, "att": 68324, "venue": "Lincoln Financial Field, Philadelphia", "ref": "Glenn Nyberg", "hform": "5-4-1", "aform": "4-2-2-2", "hmgr": "Dick Advocaat", "amgr": "Emerse Faé", "hcap": "Leandro Bacuna", "acap": "Franck Kessié", "hpos": 37, "apos": 63, "hsot": 2, "asot": 3, "hsh": 11, "ash": 7, "hsv": 1, "asv": 2, "hyc": 2, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 11, "afoul": 6, "hcor": 4, "acor": 6}, {"id": 56, "gw": 3, "dow": "Thu", "date": "2026-06-25", "time": "18:00", "home": "Japan", "away": "Sweden", "score": "1–1", "hs": 1, "as": 1, "att": 70137, "venue": "AT&T Stadium, Arlington", "ref": "Iván Barton", "hform": "3-4-3", "aform": "3-4-3", "hmgr": "Hajime Moriyasu", "amgr": "Graham Potter", "hcap": "Ko Itakura", "acap": "Victor Lindelöf", "hpos": 52, "apos": 48, "hsot": 3, "asot": 5, "hsh": 8, "ash": 11, "hsv": 4, "asv": 2, "hyc": 1, "ayc": 2, "hrc": 0, "arc": 0, "hfoul": 20, "afoul": 11, "hcor": 2, "acor": 8}, {"id": 57, "gw": 3, "dow": "Thu", "date": "2026-06-25", "time": "18:00", "home": "Tunisia", "away": "Netherlands", "score": "1–3", "hs": 1, "as": 3, "att": 68391, "venue": "GEHA Field at Arrowhead Stadium, Kansas City", "ref": "Katia García", "hform": "5-4-1", "aform": "4-1-4-1", "hmgr": "Hervé Renard", "amgr": "Ronald Koeman", "hcap": "Ellyes Skhiri", "acap": "Virgil van Dijk", "hpos": 29, "apos": 72, "hsot": 4, "asot": 7, "hsh": 10, "ash": 20, "hsv": 4, "asv": 3, "hyc": 0, "ayc": 0, "hrc": 0, "arc": 0, "hfoul": 11, "afoul": 10, "hcor": 4, "acor": 6}, {"id": 58, "gw": 3, "dow": "Thu", "date": "2026-06-25", "time": "19:00", "home": "Paraguay", "away": "Australia", "score": "0–0", "hs": 0, "as": 0, "att": 68827, "venue": "Levi's Stadium, Santa Clara", "ref": "Clément Turpin", "hform": "5-3-2", "aform": "3-4-3", "hmgr": "Gustavo Alfaro", "amgr": "Tony Popovic", "hcap": "Gustavo Gómez", "acap": "Harry Souttar", "hpos": 44, "apos": 56, "hsot": 2, "asot": 5, "hsh": 7, "ash": 12, "hsv": 5, "asv": 2, "hyc": 1, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 9, "afoul": 6, "hcor": 1, "acor": 3}, {"id": 59, "gw": 3, "dow": "Thu", "date": "2026-06-25", "time": "19:00", "home": "Türkiye", "away": "United States", "score": "3–2", "hs": 3, "as": 2, "att": 70492, "venue": "SoFi Stadium, Inglewood", "ref": "Mustapha Ghorbal", "hform": "5-4-1", "aform": "4-2-3-1", "hmgr": "Vincenzo Montella", "amgr": "Mauricio Pochettino", "hcap": "Zeki Çelik", "acap": "Weston McKennie", "hpos": 48, "apos": 53, "hsot": 3, "asot": 7, "hsh": 9, "ash": 18, "hsv": 5, "asv": 0, "hyc": 0, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 13, "afoul": 13, "hcor": 2, "acor": 9}, {"id": 60, "gw": 3, "dow": "Fri", "date": "2026-06-26", "time": "15:00", "home": "Norway", "away": "France", "score": "1–4", "hs": 1, "as": 4, "att": 64146, "venue": "Gillette Stadium, Foxborough", "ref": "Michael Oliver", "hform": "4-1-4-1", "aform": "4-2-3-1", "hmgr": "Ståle Solbakken", "amgr": "Guy Stéphan", "hcap": "Patrick Berg", "acap": "Kylian Mbappé", "hpos": 43, "apos": 57, "hsot": 4, "asot": 9, "hsh": 10, "ash": 18, "hsv": 5, "asv": 2, "hyc": 1, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 9, "afoul": 11, "hcor": 4, "acor": 5}, {"id": 61, "gw": 3, "dow": "Fri", "date": "2026-06-26", "time": "15:00", "home": "Senegal", "away": "Iraq", "score": "5–0", "hs": 5, "as": 0, "att": 43036, "venue": "BMO Field, Toronto", "ref": "Anthony Taylor", "hform": "4-1-4-1", "aform": "4-2-3-1", "hmgr": "Pape Thiaw", "amgr": "Graham Arnold", "hcap": "Idrissa Gueye", "acap": "Ibrahim Bayesh", "hpos": 69, "apos": 31, "hsot": 12, "asot": 1, "hsh": 28, "ash": 6, "hsv": 1, "asv": 7, "hyc": 2, "ayc": 2, "hrc": 0, "arc": 1, "hfoul": 10, "afoul": 11, "hcor": 12, "acor": 3}, {"id": 62, "gw": 3, "dow": "Fri", "date": "2026-06-26", "time": "18:00", "home": "Uruguay", "away": "Spain", "score": "0–1", "hs": 0, "as": 1, "att": 45065, "venue": "Estadio Akron, Zapopan", "ref": "Ismail Elfath", "hform": "4-1-4-1", "aform": "4-1-4-1", "hmgr": "Marcelo Bielsa", "amgr": "Luis de la Fuente", "hcap": "Federico Valverde", "acap": "Rodri", "hpos": 33, "apos": 67, "hsot": 1, "asot": 1, "hsh": 5, "ash": 6, "hsv": 0, "asv": 1, "hyc": 3, "ayc": 1, "hrc": 1, "arc": 0, "hfoul": 14, "afoul": 14, "hcor": 1, "acor": 6}, {"id": 63, "gw": 3, "dow": "Fri", "date": "2026-06-26", "time": "19:00", "home": "Cabo Verde", "away": "Saudi Arabia", "score": "0–0", "hs": 0, "as": 0, "att": 68278, "venue": "Reliant Stadium, Houston", "ref": "François Letexier", "hform": "4-1-4-1", "aform": "4-2-3-1", "hmgr": "Bubista", "amgr": "Georgios Donis", "hcap": "Ryan Mendes", "acap": "Salem Al-Dawsari", "hpos": 51, "apos": 49, "hsot": 2, "asot": 3, "hsh": 15, "ash": 7, "hsv": 3, "asv": 2, "hyc": 1, "ayc": 3, "hrc": 0, "arc": 0, "hfoul": 10, "afoul": 16, "hcor": 4, "acor": 2}, {"id": 64, "gw": 3, "dow": "Fri", "date": "2026-06-26", "time": "20:00", "home": "Egypt", "away": "IR Iran", "score": "1–1", "hs": 1, "as": 1, "att": 66925, "venue": "Lumen Field, Seattle", "ref": "Szymon Marciniak", "hform": "4-2-2-2", "aform": "5-4-1", "hmgr": "Hossam Hassan", "amgr": "Amir Ghalehnoy", "hcap": "Mohamed Salah", "acap": "Mehdi Taremi", "hpos": 61, "apos": 39, "hsot": 3, "asot": 4, "hsh": 15, "ash": 13, "hsv": 1, "asv": 2, "hyc": 3, "ayc": 4, "hrc": 0, "arc": 0, "hfoul": 11, "afoul": 16, "hcor": 8, "acor": 2}, {"id": 65, "gw": 3, "dow": "Fri", "date": "2026-06-26", "time": "20:00", "home": "New Zealand", "away": "Belgium", "score": "1–5", "hs": 1, "as": 5, "att": 52497, "venue": "BC Place Stadium, Vancouver", "ref": "Adham Makhadmeh", "hform": "4-2-3-1", "aform": "4-2-3-1", "hmgr": "Darren Bazeley", "amgr": "Rudi Garcia", "hcap": "Chris Wood", "acap": "Youri Tielemans", "hpos": 45, "apos": 55, "hsot": 2, "asot": 10, "hsh": 6, "ash": 35, "hsv": 5, "asv": 1, "hyc": 2, "ayc": 0, "hrc": 0, "arc": 0, "hfoul": 10, "afoul": 7, "hcor": 5, "acor": 8}, {"id": 66, "gw": 3, "dow": "Sat", "date": "2026-06-27", "time": "17:00", "home": "Panama", "away": "England", "score": "0–2", "hs": 0, "as": 2, "att": 80663, "venue": "MetLife Stadium, East Rutherford", "ref": "Abdulrahman Ibrahim Al Jassim", "hform": "5-4-1", "aform": "4-2-3-1", "hmgr": "Thomas Christiansen", "amgr": "Thomas Tuchel", "hcap": "Yoel Bárcenas", "acap": "Harry Kane", "hpos": 33, "apos": 67, "hsot": 2, "asot": 6, "hsh": 13, "ash": 17, "hsv": 4, "asv": 2, "hyc": 2, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 16, "afoul": 13, "hcor": 3, "acor": 7}, {"id": 67, "gw": 3, "dow": "Sat", "date": "2026-06-27", "time": "17:00", "home": "Croatia", "away": "Ghana", "score": "2–1", "hs": 2, "as": 1, "att": 68324, "venue": "Lincoln Financial Field, Philadelphia", "ref": "Drew Fischer", "hform": "4-2-3-1", "aform": "4-1-4-1", "hmgr": "Zlatko Dalić", "amgr": "Carlos Queiroz", "hcap": "Luka Modrić", "acap": "Jordan Ayew", "hpos": 53, "apos": 47, "hsot": 4, "asot": 1, "hsh": 8, "ash": 6, "hsv": 0, "asv": 2, "hyc": 1, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 9, "afoul": 13, "hcor": 3, "acor": 2}, {"id": 68, "gw": 3, "dow": "Sat", "date": "2026-06-27", "time": "19:30", "home": "Congo DR", "away": "Uzbekistan", "score": "3–1", "hs": 3, "as": 1, "att": 68239, "venue": "Mercedes-Benz Stadium, Atlanta", "ref": "Felix Zwayer", "hform": "4-2-2-2", "aform": "3-4-3", "hmgr": "Sébastien Desabre", "amgr": "Fabio Cannavaro", "hcap": "Chancel Mbemba", "acap": "Eldor Shomurodov", "hpos": 58, "apos": 42, "hsot": 4, "asot": 1, "hsh": 19, "ash": 3, "hsv": 1, "asv": 1, "hyc": 3, "ayc": 2, "hrc": 0, "arc": 0, "hfoul": 6, "afoul": 16, "hcor": 2, "acor": 4}, {"id": 69, "gw": 3, "dow": "Sat", "date": "2026-06-27", "time": "19:30", "home": "Colombia", "away": "Portugal", "score": "0–0", "hs": 0, "as": 0, "att": 64478, "venue": "Hard Rock Stadium, Miami Gardens", "ref": "Alireza Faghani", "hform": "4-1-4-1", "aform": "4-2-3-1", "hmgr": "Néstor Lorenzo", "amgr": "Roberto Martínez", "hcap": "James Rodríguez", "acap": "Cristiano Ronaldo", "hpos": 55, "apos": 45, "hsot": 6, "asot": 2, "hsh": 24, "ash": 13, "hsv": 2, "asv": 6, "hyc": 1, "ayc": 0, "hrc": 0, "arc": 0, "hfoul": 12, "afoul": 6, "hcor": 5, "acor": 2}, {"id": 70, "gw": 3, "dow": "Sat", "date": "2026-06-27", "time": "21:00", "home": "Jordan", "away": "Argentina", "score": "1–3", "hs": 1, "as": 3, "att": 70649, "venue": "AT&T Stadium, Arlington", "ref": "István Kovács", "hform": "5-4-1", "aform": "4-1-4-1", "hmgr": "Jamal Sellami", "amgr": "Lionel Scaloni", "hcap": "Ihsan Haddad", "acap": "Nicolás Otamendi", "hpos": 27, "apos": 73, "hsot": 1, "asot": 4, "hsh": 5, "ash": 12, "hsv": 1, "asv": 0, "hyc": 3, "ayc": 0, "hrc": 0, "arc": 0, "hfoul": 13, "afoul": 7, "hcor": 2, "acor": 6}, {"id": 71, "gw": 3, "dow": "Sat", "date": "2026-06-27", "time": "21:00", "home": "Algeria", "away": "Austria", "score": "3–3", "hs": 3, "as": 3, "att": 69045, "venue": "GEHA Field at Arrowhead Stadium, Kansas City", "ref": "Ilgiz Tantashev", "hform": "4-2-3-1", "aform": "4-1-3-2", "hmgr": "Vladimir Petković", "amgr": "Ralf Rangnick", "hcap": "Riyad Mahrez", "acap": "David Alaba", "hpos": 65, "apos": 35, "hsot": 5, "asot": 3, "hsh": 12, "ash": 10, "hsv": 0, "asv": 2, "hyc": 0, "ayc": 1, "hrc": 0, "arc": 0, "hfoul": 3, "afoul": 7, "hcor": 0, "acor": 3}];
+
+/* ---------- State ---------- */
+const F = {team:"",venue:"",gw:"",ref:"",form:""};
+let scorerSort="goals", attSort="avg", tblSort={k:"date",dir:1}, search="";
+const NS="http://www.w3.org/2000/svg";
+const el=id=>document.getElementById(id);
+const tip=el("tip");
+
+/* ---------- Helpers ---------- */
+const C={blue:"#338ef7",cyan:"#28e0d0",gold:"#ffcc33",green:"#31d68f",amber:"#ffab3d",red:"#ff5d6c",violet:"#a98bff"};
+const fmt=n=>n==null?"–":n.toLocaleString();
+const fmt1=n=>n==null?"–":(Math.round(n*10)/10).toLocaleString(undefined,{minimumFractionDigits:1,maximumFractionDigits:1});
+function svg(w,h){const s=document.createElementNS(NS,"svg");s.setAttribute("viewBox",`0 0 ${w} ${h}`);s.setAttribute("width","100%");s.style.display="block";s.dataset.w=w;s.dataset.h=h;return s;}
+function mk(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+function showTip(html,ev){tip.innerHTML=html;tip.style.opacity=1;moveTip(ev);}
+function moveTip(ev){const p=12;let x=ev.clientX+p,y=ev.clientY+p;const r=tip.getBoundingClientRect();if(x+r.width>innerWidth-8)x=ev.clientX-r.width-p;if(y+r.height>innerHeight-8)y=ev.clientY-r.height-p;tip.style.left=x+"px";tip.style.top=y+"px";}
+function hideTip(){tip.style.opacity=0;}
+
+/* ---------- Data derivations ---------- */
+function outcome(m){ if(m.hs>m.as)return"H"; if(m.as>m.hs)return"A"; return"D"; }
+// expand a match into two team-performance records
+function perfs(m){
+  return [
+    {team:m.home,opp:m.away,gf:m.hs,ga:m.as,pos:m.hpos,sot:m.hsot,sh:m.hsh,yc:m.hyc,rc:m.hrc,form:m.hform,isHome:true,mid:m.id,
+     res:(m.hs>m.as?"W":m.hs<m.as?"L":"D")},
+    {team:m.away,opp:m.home,gf:m.as,ga:m.hs,pos:m.apos,sot:m.asot,sh:m.ash,yc:m.ayc,rc:m.arc,form:m.aform,isHome:false,mid:m.id,
+     res:(m.as>m.hs?"W":m.as<m.hs?"L":"D")}
+  ];
+}
+function matchHasTeam(m,t){return m.home===t||m.away===t;}
+function matchHasForm(m,f){return m.hform===f||m.aform===f;}
+
+function filtered(){
+  return RAW_DATA.filter(m=>{
+    if(F.team && !matchHasTeam(m,F.team))return false;
+    if(F.venue && m.venue!==F.venue)return false;
+    if(F.gw && m.gw!=F.gw)return false;
+    if(F.ref && m.ref!==F.ref)return false;
+    if(F.form && !matchHasForm(m,F.form))return false;
+    return true;
+  });
+}
+
+/* ---------- Filter population ---------- */
+function uniq(arr){return [...new Set(arr)].sort((a,b)=>String(a).localeCompare(String(b)));}
+function populate(){
+  const teams=uniq(RAW_DATA.flatMap(m=>[m.home,m.away]));
+  const venues=uniq(RAW_DATA.map(m=>m.venue));
+  const gws=uniq(RAW_DATA.map(m=>m.gw));
+  const refs=uniq(RAW_DATA.map(m=>m.ref));
+  const forms=uniq(RAW_DATA.flatMap(m=>[m.hform,m.aform]));
+  const opt=(v,l)=>`<option value="${v}">${l}</option>`;
+  el("f-team").innerHTML=opt("","All teams")+teams.map(t=>opt(t,t)).join("");
+  el("f-venue").innerHTML=opt("","All venues")+venues.map(v=>opt(v,v)).join("");
+  el("f-gw").innerHTML=opt("","All gameweeks")+gws.map(g=>opt(g,"Matchday "+g)).join("");
+  el("f-ref").innerHTML=opt("","All referees")+refs.map(r=>opt(r,r)).join("");
+  el("f-form").innerHTML=opt("","All formations")+forms.map(f=>opt(f,f)).join("");
+}
+function syncSelects(){el("f-team").value=F.team;el("f-venue").value=F.venue;el("f-gw").value=F.gw;el("f-ref").value=F.ref;el("f-form").value=F.form;}
+
+/* ---------- KPIs ---------- */
+function renderKPIs(data){
+  const n=data.length;
+  const goals=data.reduce((s,m)=>s+(m.hs||0)+(m.as||0),0);
+  const att=data.filter(m=>m.att!=null);
+  const avgAtt=att.length?att.reduce((s,m)=>s+m.att,0)/att.length:null;
+  const draws=data.filter(m=>outcome(m)==="D").length;
+  const cards=data.reduce((s,m)=>s+(m.hyc||0)+(m.ayc||0)+(m.hrc||0)+(m.arc||0),0);
+  const items=[
+    {l:"Total Matches",v:fmt(n),f:`across ${uniq(data.flatMap(m=>[m.home,m.away])).length} teams`,c:C.blue,ic:"⚽"},
+    {l:"Total Goals",v:fmt(goals),f:`${fmt(cards)} cards shown`,c:C.cyan,ic:"🥅"},
+    {l:"Goals / Match",v:n?fmt1(goals/n):"–",f:"attacking intensity",c:C.gold,ic:"📈"},
+    {l:"Avg Attendance",v:avgAtt?Math.round(avgAtt/1000)+"K":"–",f:avgAtt?fmt(Math.round(avgAtt))+" per game":"–",c:C.green,ic:"👥"},
+    {l:"Draw Rate",v:n?Math.round(draws/n*100)+"%":"–",f:`${draws} drawn of ${n}`,c:C.amber,ic:"🤝"},
+  ];
+  el("kpis").innerHTML=items.map(k=>`<div class="kpi" style="--accent:${k.c}">
+    <div class="kicon" style="color:${k.c}">${k.ic}</div>
+    <div class="klabel">${k.l}</div><div class="kval">${k.v}</div><div class="kfoot">${k.f}</div></div>`).join("");
+}
+
+/* ---------- Chips ---------- */
+function renderChips(){
+  const map={team:"Team",venue:"Venue",gw:"Gameweek",ref:"Referee",form:"Formation"};
+  const parts=[];
+  for(const k in map){ if(F[k]!==""){ const disp=k==="gw"?"Matchday "+F[k]:F[k];
+    parts.push(`<span class="chip" data-k="${k}"><b>${map[k]}</b> ${disp} <span class="x">✕</span></span>`);}}
+  el("chips").innerHTML=parts.join("");
+  el("chips").querySelectorAll(".chip").forEach(c=>c.onclick=()=>{F[c.dataset.k]="";update();});
+}
+
+/* ---------- 1a. Donut ---------- */
+function renderDonut(data){
+  const box=el("donut");box.innerHTML="";
+  const W=440,H=280,cx=140,cy=140,r=100,ir=62;
+  const counts={H:0,A:0,D:0};data.forEach(m=>counts[outcome(m)]++);
+  const total=data.length;
+  const segs=[{k:"H",l:"Home Win",c:C.green},{k:"A",l:"Away Win",c:C.violet},{k:"D",l:"Draw",c:C.amber}];
+  const s=svg(W,H);box.appendChild(s);
+  if(!total){box.innerHTML='<div class="empty">No matches in selection</div>';return;}
+  let a0=-Math.PI/2;
+  segs.forEach(seg=>{
+    const frac=counts[seg.k]/total; if(frac<=0)return;
+    const a1=a0+frac*Math.PI*2;
+    const large=a1-a0>Math.PI?1:0;
+    const x0=cx+r*Math.cos(a0),y0=cy+r*Math.sin(a0),x1=cx+r*Math.cos(a1),y1=cy+r*Math.sin(a1);
+    const xi0=cx+ir*Math.cos(a1),yi0=cy+ir*Math.sin(a1),xi1=cx+ir*Math.cos(a0),yi1=cy+ir*Math.sin(a0);
+    const active=F.outcome; // not used, outcome not a filter; keep selection via team? skip
+    const path=mk("path",{d:`M${x0},${y0} A${r},${r} 0 ${large} 1 ${x1},${y1} L${xi0},${yi0} A${ir},${ir} 0 ${large} 0 ${xi1},${yi1} Z`,
+      fill:seg.c,stroke:"var(--panel)","stroke-width":2,class:"clickable"},s);
+    path.style.transition="opacity .15s";
+    path.onmouseenter=e=>{path.style.opacity=.82;showTip(`<div class="tt-h" style="color:${seg.c}">${seg.l}</div><div class="tt-r"><span>Matches</span><b>${counts[seg.k]}</b></div><div class="tt-r"><span>Share</span><b>${Math.round(frac*100)}%</b></div>`,e);};
+    path.onmousemove=moveTip;path.onmouseleave=()=>{path.style.opacity=1;hideTip();};
+    a0=a1;
+  });
+  mk("text",{x:cx,y:cy-6,"text-anchor":"middle",fill:"var(--txt)","font-size":30,"font-weight":800},s).textContent=total;
+  mk("text",{x:cx,y:cy+16,"text-anchor":"middle",fill:"var(--txt-faint)","font-size":11,"font-weight":700,"letter-spacing":1},s).textContent="MATCHES";
+  // legend
+  let ly=70;
+  segs.forEach(seg=>{
+    const g=mk("g",{class:"clickable"},s);
+    mk("rect",{x:300,y:ly,width:13,height:13,rx:3,fill:seg.c},g);
+    const t=mk("text",{x:320,y:ly+11,fill:"var(--txt-dim)","font-size":12.5,"font-weight":600},g);
+    t.textContent=`${seg.l}`;
+    const t2=mk("text",{x:300,y:ly+30,fill:"var(--txt)","font-size":12,"font-weight":700},g);
+    t2.textContent=`${counts[seg.k]} · ${total?Math.round(counts[seg.k]/total*100):0}%`;
+    ly+=52;
+  });
+}
+
+/* ---------- 1b. Histogram goals/match ---------- */
+function renderHist(data){
+  const box=el("hist");box.innerHTML="";
+  const W=480,H=280,pad={l:38,r:16,t:16,b:34};
+  const goals=data.map(m=>(m.hs||0)+(m.as||0));
+  const maxG=Math.max(6,...goals,0);
+  const bins=[];for(let i=0;i<=maxG;i++)bins.push(goals.filter(g=>g===i).length);
+  const maxC=Math.max(1,...bins);
+  const s=svg(W,H);box.appendChild(s);
+  if(!data.length){box.innerHTML='<div class="empty">No matches in selection</div>';return;}
+  const iw=W-pad.l-pad.r,ih=H-pad.t-pad.b;
+  const bw=iw/bins.length;
+  for(let i=0;i<=4;i++){const y=pad.t+ih*(1-i/4);mk("line",{x1:pad.l,y1:y,x2:W-pad.r,y2:y,class:"grid-line"},s);
+    mk("text",{x:pad.l-8,y:y+3,"text-anchor":"end",class:"axis-lbl"},s).textContent=Math.round(maxC*i/4);}
+  const avg=goals.reduce((a,b)=>a+b,0)/goals.length;
+  bins.forEach((c,i)=>{
+    const h=ih*(c/maxC),x=pad.l+i*bw+bw*0.16,y=pad.t+ih-h,w=bw*0.68;
+    const g=mk("g",{class:"clickable"},s);
+    const rect=mk("rect",{x,y,width:w,height:Math.max(0,h),rx:4,fill:i===Math.round(avg)?C.gold:C.blue,class:"barfill"},g);
+    rect.style.transition="filter .15s";
+    if(c>0)mk("text",{x:x+w/2,y:y-5,"text-anchor":"middle",class:"val-lbl"},s).textContent=c;
+    mk("text",{x:pad.l+i*bw+bw/2,y:H-14,"text-anchor":"middle",class:"axis-lbl"},s).textContent=i;
+    g.onmouseenter=e=>{rect.style.filter="brightness(1.2)";showTip(`<div class="tt-h">${i} goal${i===1?"":"s"}</div><div class="tt-r"><span>Matches</span><b>${c}</b></div><div class="tt-r"><span>Share</span><b>${Math.round(c/data.length*100)}%</b></div>`,e);};
+    g.onmousemove=moveTip;g.onmouseleave=()=>{rect.style.filter="";hideTip();};
+  });
+  mk("text",{x:pad.l+iw/2,y:H-1,"text-anchor":"middle",class:"axis-lbl","font-weight":700},s).textContent="Total goals in match";
+  // avg marker
+  const ax=pad.l+(avg+0.5)*bw;
+  mk("line",{x1:ax,y1:pad.t,x2:ax,y2:pad.t+ih,stroke:C.gold,"stroke-width":1.5,"stroke-dasharray":"4 3",opacity:.8},s);
+  mk("text",{x:ax,y:pad.t+10,"text-anchor":"middle",fill:C.gold,"font-size":10.5,"font-weight":700},s).textContent="avg "+fmt1(avg);
+}
+
+/* ---------- 2a. Top scoring teams ---------- */
+function renderScorers(data){
+  const box=el("scorers");box.innerHTML="";
+  const agg={};
+  data.flatMap(perfs).forEach(p=>{const a=agg[p.team]||(agg[p.team]={team:p.team,g:0,gp:0,ga:0});a.g+=p.gf||0;a.ga+=p.ga||0;a.gp++;});
+  let list=Object.values(agg);
+  list.forEach(a=>a.avg=a.gp?a.g/a.gp:0);
+  list.sort((x,y)=>scorerSort==="avg"?y.avg-x.avg:y.g-x.g);
+  list=list.slice(0,12);
+  if(!list.length){box.innerHTML='<div class="empty">No teams in selection</div>';return;}
+  const rowH=26,gap=6,padL=118,padR=44,W=560,H=list.length*(rowH+gap)+14;
+  const maxV=Math.max(...list.map(a=>scorerSort==="avg"?a.avg:a.g),1);
+  const s=svg(W,H);box.appendChild(s);
+  const iw=W-padL-padR;
+  list.forEach((a,i)=>{
+    const y=8+i*(rowH+gap);
+    const v=scorerSort==="avg"?a.avg:a.g;
+    const w=iw*(v/maxV);
+    const g=mk("g",{class:"bar-row"},s);
+    mk("text",{x:padL-10,y:y+rowH/2+4,"text-anchor":"end",fill:F.team===a.team?C.cyan:"var(--txt)","font-size":12,"font-weight":F.team===a.team?800:600},g).textContent=a.team;
+    mk("rect",{x:padL,y,width:iw,height:rowH,rx:6,fill:"var(--bg2)"},g);
+    const grad=`url(#sg${i})`;
+    const def=mk("defs",{},g);const lg=mk("linearGradient",{id:"sg"+i,x1:0,y1:0,x2:1,y2:0},def);
+    mk("stop",{offset:0,"stop-color":C.blue},lg);mk("stop",{offset:1,"stop-color":C.cyan},lg);
+    mk("rect",{x:padL,y,width:Math.max(2,w),height:rowH,rx:6,fill:grad,class:"barfill"},g);
+    mk("text",{x:padL+Math.max(2,w)+8,y:y+rowH/2+4,fill:"var(--txt)","font-size":12,"font-weight":800},g).textContent=scorerSort==="avg"?fmt1(v):v;
+    g.onclick=()=>{F.team=F.team===a.team?"":a.team;update();};
+    g.onmouseenter=e=>showTip(`<div class="tt-h" style="color:${C.cyan}">${a.team}</div><div class="tt-r"><span>Goals for</span><b>${a.g}</b></div><div class="tt-r"><span>Goals against</span><b>${a.ga}</b></div><div class="tt-r"><span>Per match</span><b>${fmt1(a.avg)}</b></div><div class="tt-r"><span>Matches</span><b>${a.gp}</b></div>`,e);
+    g.onmousemove=moveTip;g.onmouseleave=hideTip;
+  });
+}
+
+/* ---------- 2b. Possession vs goals scatter ---------- */
+function renderScatter(data){
+  const box=el("scatter");box.innerHTML="";
+  const W=480,H=300,pad={l:42,r:14,t:14,b:40};
+  const pts=data.flatMap(perfs).filter(p=>p.pos!=null&&p.gf!=null);
+  const s=svg(W,H);box.appendChild(s);
+  if(!pts.length){box.innerHTML='<div class="empty">No data in selection</div>';return;}
+  const iw=W-pad.l-pad.r,ih=H-pad.t-pad.b;
+  const xmin=25,xmax=80;const ymax=Math.max(4,...pts.map(p=>p.gf));
+  const X=v=>pad.l+iw*((v-xmin)/(xmax-xmin));
+  const Y=v=>pad.t+ih*(1-v/ymax);
+  for(let i=0;i<=ymax;i++){const y=Y(i);mk("line",{x1:pad.l,y1:y,x2:W-pad.r,y2:y,class:"grid-line"},s);
+    mk("text",{x:pad.l-8,y:y+3,"text-anchor":"end",class:"axis-lbl"},s).textContent=i;}
+  for(let v=30;v<=80;v+=10){const x=X(v);mk("text",{x,y:H-16,"text-anchor":"middle",class:"axis-lbl"},s).textContent=v+"%";}
+  // trend line (least squares)
+  const n=pts.length;let sx=0,sy=0,sxy=0,sxx=0;
+  pts.forEach(p=>{sx+=p.pos;sy+=p.gf;sxy+=p.pos*p.gf;sxx+=p.pos*p.pos;});
+  const slope=(n*sxy-sx*sy)/(n*sxx-sx*sx||1),inter=(sy-slope*sx)/n;
+  mk("line",{x1:X(xmin),y1:Y(Math.max(0,Math.min(ymax,slope*xmin+inter))),x2:X(xmax),y2:Y(Math.max(0,Math.min(ymax,slope*xmax+inter))),stroke:C.gold,"stroke-width":2,"stroke-dasharray":"5 4",opacity:.7},s);
+  pts.forEach(p=>{
+    const jx=(Math.random()-.5)*4,jy=(Math.random()-.5)*4;
+    const c=p.res==="W"?C.green:p.res==="L"?C.red:C.amber;
+    const d=mk("circle",{cx:X(p.pos)+jx,cy:Y(p.gf)+jy,r:5.5,fill:c,opacity:.72,stroke:"rgba(0,0,0,.3)","stroke-width":1,class:"dot-pt"},s);
+    const m=RAW_DATA[p.mid];
+    d.onmouseenter=e=>{d.setAttribute("r",8);showTip(`<div class="tt-h" style="color:${c}">${p.team} <span style="color:var(--txt-faint)">vs ${p.opp}</span></div><div class="tt-r"><span>Possession</span><b>${p.pos}%</b></div><div class="tt-r"><span>Goals scored</span><b>${p.gf}</b></div><div class="tt-r"><span>Result</span><b>${p.res==="W"?"Win":p.res==="L"?"Loss":"Draw"}</b></div>`,e);};
+    d.onmousemove=moveTip;d.onmouseleave=()=>{d.setAttribute("r",5.5);hideTip();};
+    d.onclick=()=>openMatch(p.mid);
+  });
+  mk("text",{x:pad.l+iw/2,y:H-1,"text-anchor":"middle",class:"axis-lbl","font-weight":700},s).textContent="Possession %";
+  mk("text",{x:14,y:pad.t+ih/2,"text-anchor":"middle",class:"axis-lbl","font-weight":700,transform:`rotate(-90 14 ${pad.t+ih/2})`},s).textContent="Goals scored";
+}
+
+/* ---------- 3a. Formation usage ---------- */
+function renderFormations(data){
+  const box=el("formations");box.innerHTML="";
+  const cnt={};data.flatMap(perfs).forEach(p=>cnt[p.form]=(cnt[p.form]||0)+1);
+  let list=Object.entries(cnt).map(([form,c])=>({form,c})).sort((a,b)=>b.c-a.c);
+  if(!list.length){box.innerHTML='<div class="empty">No data</div>';return;}
+  const W=480,padB=52,padT=14,padL=30,padR=14,H=270;
+  const s=svg(W,H);box.appendChild(s);
+  const iw=W-padL-padR,ih=H-padT-padB;
+  const maxC=Math.max(...list.map(a=>a.c));
+  const bw=iw/list.length;
+  for(let i=0;i<=4;i++){const y=padT+ih*(1-i/4);mk("line",{x1:padL,y1:y,x2:W-padR,y2:y,class:"grid-line"},s);
+    mk("text",{x:padL-6,y:y+3,"text-anchor":"end",class:"axis-lbl"},s).textContent=Math.round(maxC*i/4);}
+  list.forEach((a,i)=>{
+    const h=ih*(a.c/maxC),x=padL+i*bw+bw*0.14,w=bw*0.72,y=padT+ih-h;
+    const g=mk("g",{class:"bar-row"},s);
+    const active=F.form===a.form;
+    mk("rect",{x,y,width:w,height:Math.max(1,h),rx:5,fill:active?C.cyan:C.blue,class:"barfill"},g);
+    mk("text",{x:x+w/2,y:y-6,"text-anchor":"middle",class:"val-lbl"},s).textContent=a.c;
+    const t=mk("text",{x:padL+i*bw+bw/2,y:H-padB+16,"text-anchor":"end",class:"axis-lbl","font-weight":active?800:600,transform:`rotate(-40 ${padL+i*bw+bw/2} ${H-padB+16})`,fill:active?C.cyan:"var(--txt-faint)"},s);
+    t.textContent=a.form;
+    g.onclick=()=>{F.form=F.form===a.form?"":a.form;update();};
+    g.onmouseenter=e=>showTip(`<div class="tt-h">${a.form}</div><div class="tt-r"><span>Deployments</span><b>${a.c}</b></div>`,e);
+    g.onmousemove=moveTip;g.onmouseleave=hideTip;
+  });
+}
+
+/* ---------- 3b. Formation effectiveness ---------- */
+function renderFormEff(data){
+  const box=el("formeff");box.innerHTML="";
+  const agg={};
+  data.flatMap(perfs).forEach(p=>{const a=agg[p.form]||(agg[p.form]={form:p.form,n:0,w:0,g:0});a.n++;if(p.res==="W")a.w++;a.g+=p.gf||0;});
+  let list=Object.values(agg).filter(a=>a.n>=2).map(a=>({...a,wr:a.w/a.n,gpm:a.g/a.n})).sort((x,y)=>y.wr-x.wr).slice(0,8);
+  if(!list.length){box.innerHTML='<div class="empty">Not enough deployments (need ≥2 per shape)</div>';return;}
+  const rowH=24,gap=8,padL=70,padR=110,W=480,H=list.length*(rowH+gap)+10;
+  const s=svg(W,H);box.appendChild(s);
+  const iw=W-padL-padR;
+  list.forEach((a,i)=>{
+    const y=6+i*(rowH+gap);
+    mk("text",{x:padL-8,y:y+rowH/2+4,"text-anchor":"end",fill:"var(--txt)","font-size":11.5,"font-weight":700},s).textContent=a.form;
+    mk("rect",{x:padL,y,width:iw,height:rowH,rx:5,fill:"var(--bg2)"},s);
+    const w=iw*a.wr;
+    const col=a.wr>=.5?C.green:a.wr>=.34?C.amber:C.red;
+    const g=mk("g",{class:"bar-row"},s);
+    mk("rect",{x:padL,y,width:Math.max(2,w),height:rowH,rx:5,fill:col,class:"barfill"},g);
+    mk("text",{x:padL+iw+8,y:y+rowH/2+4,fill:"var(--txt-dim)","font-size":11,"font-weight":700},s).textContent=`${Math.round(a.wr*100)}% W · ${fmt1(a.gpm)} g/m`;
+    g.onmouseenter=e=>showTip(`<div class="tt-h">${a.form}</div><div class="tt-r"><span>Deployments</span><b>${a.n}</b></div><div class="tt-r"><span>Wins</span><b>${a.w}</b></div><div class="tt-r"><span>Win rate</span><b>${Math.round(a.wr*100)}%</b></div><div class="tt-r"><span>Goals/match</span><b>${fmt1(a.gpm)}</b></div>`,e);
+    g.onmousemove=moveTip;g.onmouseleave=hideTip;
+    g.onclick=()=>{F.form=F.form===a.form?"":a.form;update();};
+  });
+}
+
+/* ---------- 4. Cards by team (stacked) ---------- */
+function renderCards(data){
+  const box=el("cards");box.innerHTML="";
+  const agg={};
+  data.flatMap(perfs).forEach(p=>{const a=agg[p.team]||(agg[p.team]={team:p.team,y:0,r:0});a.y+=p.yc||0;a.r+=p.rc||0;});
+  let list=Object.values(agg).map(a=>({...a,tot:a.y+a.r})).filter(a=>a.tot>0).sort((x,y)=>y.tot-x.tot).slice(0,16);
+  if(!list.length){box.innerHTML='<div class="empty">No cards recorded in selection</div>';return;}
+  const W=1100,padT=16,padB=58,padL=34,padR=14,H=300;
+  const s=svg(W,H);box.appendChild(s);
+  const iw=W-padL-padR,ih=H-padT-padB;
+  const maxV=Math.max(...list.map(a=>a.tot));
+  const bw=iw/list.length;
+  for(let i=0;i<=4;i++){const y=padT+ih*(1-i/4);mk("line",{x1:padL,y1:y,x2:W-padR,y2:y,class:"grid-line"},s);
+    mk("text",{x:padL-6,y:y+3,"text-anchor":"end",class:"axis-lbl"},s).textContent=Math.round(maxV*i/4);}
+  list.forEach((a,i)=>{
+    const x=padL+i*bw+bw*0.16,w=bw*0.68;
+    const yh=ih*(a.y/maxV),rh=ih*(a.r/maxV);
+    const yY=padT+ih-yh, rY=yY-rh;
+    const active=F.team===a.team;
+    const g=mk("g",{class:"bar-row"},s);
+    mk("rect",{x,y:yY,width:w,height:Math.max(0,yh),rx:3,fill:C.gold,class:"barfill"},g);
+    if(a.r>0)mk("rect",{x,y:rY,width:w,height:Math.max(0,rh),rx:3,fill:C.red,class:"barfill"},g);
+    mk("text",{x:x+w/2,y:rY-5,"text-anchor":"middle",class:"val-lbl"},s).textContent=a.tot;
+    const t=mk("text",{x:padL+i*bw+bw/2,y:H-padB+16,"text-anchor":"end",class:"axis-lbl",transform:`rotate(-42 ${padL+i*bw+bw/2} ${H-padB+16})`,"font-weight":active?800:600,fill:active?C.cyan:"var(--txt-faint)"},s);
+    t.textContent=a.team;
+    g.onclick=()=>{F.team=F.team===a.team?"":a.team;update();};
+    g.onmouseenter=e=>showTip(`<div class="tt-h">${a.team}</div><div class="tt-r"><span style="color:${C.gold}">Yellow</span><b>${a.y}</b></div><div class="tt-r"><span style="color:${C.red}">Red</span><b>${a.r}</b></div><div class="tt-r"><span>Total</span><b>${a.tot}</b></div>`,e);
+    g.onmousemove=moveTip;g.onmouseleave=hideTip;
+  });
+}
+
+/* ---------- 5. Attendance by venue ---------- */
+function renderAttendance(data){
+  const box=el("attendance");box.innerHTML="";
+  const agg={};
+  data.forEach(m=>{if(m.att==null)return;const a=agg[m.venue]||(agg[m.venue]={venue:m.venue,sum:0,n:0});a.sum+=m.att;a.n++;});
+  let list=Object.values(agg).map(a=>({...a,avg:a.sum/a.n})).sort((x,y)=>attSort==="total"?y.sum-x.sum:y.avg-x.avg);
+  if(!list.length){box.innerHTML='<div class="empty">No attendance data in selection</div>';return;}
+  const rowH=24,gap=7,padL=210,padR=90,W=1100,H=list.length*(rowH+gap)+12;
+  const s=svg(W,H);box.appendChild(s);
+  const iw=W-padL-padR;
+  const maxV=Math.max(...list.map(a=>attSort==="total"?a.sum:a.avg));
+  list.forEach((a,i)=>{
+    const y=8+i*(rowH+gap);
+    const v=attSort==="total"?a.sum:a.avg;
+    const w=iw*(v/maxV);
+    const active=F.venue===a.venue;
+    const g=mk("g",{class:"bar-row"},s);
+    mk("text",{x:padL-10,y:y+rowH/2+4,"text-anchor":"end",fill:active?C.cyan:"var(--txt)","font-size":11.5,"font-weight":active?800:600},g).textContent=a.venue.length>30?a.venue.slice(0,29)+"…":a.venue;
+    mk("rect",{x:padL,y,width:iw,height:rowH,rx:5,fill:"var(--bg2)"},g);
+    const def=mk("defs",{},g);const lg=mk("linearGradient",{id:"ag"+i,x1:0,y1:0,x2:1,y2:0},def);
+    mk("stop",{offset:0,"stop-color":C.green},lg);mk("stop",{offset:1,"stop-color":C.cyan},lg);
+    mk("rect",{x:padL,y,width:Math.max(2,w),height:rowH,rx:5,fill:`url(#ag${i})`,class:"barfill"},g);
+    mk("text",{x:padL+iw+8,y:y+rowH/2+4,fill:"var(--txt-dim)","font-size":11,"font-weight":700},g).textContent=fmt(Math.round(v));
+    g.onclick=()=>{F.venue=F.venue===a.venue?"":a.venue;update();};
+    g.onmouseenter=e=>showTip(`<div class="tt-h" style="color:${C.green}">${a.venue}</div><div class="tt-r"><span>Avg attendance</span><b>${fmt(Math.round(a.avg))}</b></div><div class="tt-r"><span>Total</span><b>${fmt(a.sum)}</b></div><div class="tt-r"><span>Matches</span><b>${a.n}</b></div>`,e);
+    g.onmousemove=moveTip;g.onmouseleave=hideTip;
+  });
+}
+
+/* ---------- 6. Match table ---------- */
+const COLS=[
+  {k:"date",l:"Date",g:m=>m.date},
+  {k:"gw",l:"MD",g:m=>m.gw},
+  {k:"home",l:"Home",g:m=>m.home},
+  {k:"score",l:"Score",g:m=>m.hs+"-"+m.as},
+  {k:"away",l:"Away",g:m=>m.away},
+  {k:"goals",l:"Goals",g:m=>(m.hs||0)+(m.as||0)},
+  {k:"att",l:"Attend.",g:m=>m.att==null?-1:m.att},
+  {k:"venue",l:"Venue",g:m=>m.venue},
+  {k:"ref",l:"Referee",g:m=>m.ref},
+];
+function renderTable(data){
+  const thr=el("thead-row");
+  thr.innerHTML=COLS.map(c=>`<th data-k="${c.k}">${c.l} <span class="arr">${tblSort.k===c.k?(tblSort.dir>0?"▲":"▼"):"↕"}</span></th>`).join("");
+  thr.querySelectorAll("th").forEach(th=>th.onclick=()=>{const k=th.dataset.k;if(tblSort.k===k)tblSort.dir*=-1;else{tblSort={k,dir:1};}renderTable(filtered());});
+  let rows=data.slice();
+  if(search){const q=search.toLowerCase();rows=rows.filter(m=>[m.home,m.away,m.venue,m.ref,m.hmgr,m.amgr].some(v=>String(v).toLowerCase().includes(q)));}
+  const col=COLS.find(c=>c.k===tblSort.k);
+  rows.sort((a,b)=>{let x=col.g(a),y=col.g(b);if(typeof x==="string"){return tblSort.dir*x.localeCompare(y);}return tblSort.dir*(x-y);});
+  const tb=el("tbody");
+  el("tbl-count").textContent=`${rows.length} match${rows.length===1?"":"es"}`;
+  if(!rows.length){tb.innerHTML='<tr><td colspan="9"><div class="empty">No matches match the current filters</div></td></tr>';return;}
+  tb.innerHTML=rows.map(m=>{
+    const o=outcome(m);
+    return `<tr data-id="${m.id}">
+      <td class="muted">${m.dow} ${m.date.slice(5)}</td>
+      <td><span class="tag ${o}">MD${m.gw}</span></td>
+      <td style="font-weight:${o==="H"?800:600};color:${o==="H"?C.green:"var(--txt)"}">${m.home}</td>
+      <td><span class="scorebox">${m.hs}–${m.as}</span></td>
+      <td style="font-weight:${o==="A"?800:600};color:${o==="A"?C.violet:"var(--txt)"}">${m.away}</td>
+      <td class="muted">${(m.hs||0)+(m.as||0)}</td>
+      <td class="muted">${m.att==null?"–":fmt(m.att)}</td>
+      <td class="muted">${m.venue}</td>
+      <td class="muted">${m.ref}</td></tr>`;
+  }).join("");
+  tb.querySelectorAll("tr[data-id]").forEach(tr=>tr.onclick=()=>openMatch(+tr.dataset.id));
+}
+
+/* ---------- Drill-down modal ---------- */
+function statRow(label,h,a,fmtFn){
+  fmtFn=fmtFn||(v=>v);
+  const raw=(h||0)+(a||0);const tot=raw||1;const hp=(h||0)/tot*100;
+  const lw=raw?hp*0.5:0, rw=raw?(100-hp)*0.5:0;
+  return `<div class="statrow"><div class="hv">${fmtFn(h)}</div>
+    <div style="width:220px"><div class="lbl">${label}</div><div class="bar"><div class="bl" style="width:${lw}%"></div><div class="br" style="width:${rw}%"></div></div></div>
+    <div class="av">${fmtFn(a)}</div></div>`;
+}
+function openMatch(id){
+  const m=RAW_DATA[id];if(!m)return;
+  const o=outcome(m);
+  const res=o==="H"?`${m.home} win`:o==="A"?`${m.away} win`:"Draw";
+  el("modal").innerHTML=`
+    <div class="modal-head">
+      <button class="mclose" onclick="closeModal()">✕</button>
+      <div style="text-align:center" class="mw">Matchday ${m.gw} · ${m.dow} ${m.date} · ${m.time}</div>
+      <div class="mteams">
+        <div class="t h" style="color:${o==="H"?C.green:"var(--txt)"}">${m.home}</div>
+        <div class="sc">${m.hs}–${m.as}</div>
+        <div class="t a" style="color:${o==="A"?C.violet:"var(--txt)"}">${m.away}</div>
+      </div>
+      <div class="mmeta">${res} · <b style="color:var(--txt)">${m.venue}</b></div>
+    </div>
+    <div class="statgrid">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--txt-faint);font-weight:700;letter-spacing:1px;margin-bottom:14px">
+        <span>${m.hform}</span><span style="color:var(--txt-dim)">FORMATION</span><span>${m.aform}</span></div>
+      ${statRow("Possession",m.hpos,m.apos,v=>v+"%")}
+      ${statRow("Shots",m.hsh,m.ash)}
+      ${statRow("Shots on target",m.hsot,m.asot)}
+      ${statRow("Saves",m.hsv,m.asv)}
+      ${statRow("Corners",m.hcor,m.acor)}
+      ${statRow("Fouls",m.hfoul,m.afoul)}
+      ${statRow("Yellow cards",m.hyc,m.ayc)}
+      ${statRow("Red cards",m.hrc,m.arc)}
+    </div>
+    <div class="mextra">
+      <span>Manager: <b>${m.hmgr}</b> vs <b>${m.amgr}</b></span>
+      <span>Captains: <b>${m.hcap}</b> · <b>${m.acap}</b></span>
+      <span>Referee: <b>${m.ref}</b></span>
+      <span>Attendance: <b>${m.att==null?"–":fmt(m.att)}</b></span>
+    </div>`;
+  el("modal-bg").classList.add("show");
+}
+function closeModal(){el("modal-bg").classList.remove("show");}
+el("modal-bg").onclick=e=>{if(e.target===el("modal-bg"))closeModal();};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
+
+/* ---------- 7. Insights ---------- */
+function renderInsights(data){
+  const box=el("insights");
+  if(!data.length){box.innerHTML='<div class="insight"><p class="empty">No matches in selection to summarise.</p></div>';return;}
+  const perfL=data.flatMap(perfs);
+  const goals=data.reduce((s,m)=>s+(m.hs||0)+(m.as||0),0);
+  const gpm=goals/data.length;
+  // top scorer
+  const scAgg={};perfL.forEach(p=>scAgg[p.team]=(scAgg[p.team]||0)+(p.gf||0));
+  const topSc=Object.entries(scAgg).sort((a,b)=>b[1]-a[1])[0];
+  // outcomes
+  const homeW=data.filter(m=>outcome(m)==="H").length, awayW=data.filter(m=>outcome(m)==="A").length, dr=data.filter(m=>outcome(m)==="D").length;
+  const homeAdv=Math.round(homeW/data.length*100);
+  // possession-goal correlation
+  const pts=perfL.filter(p=>p.pos!=null);
+  let corr=0;{const n=pts.length;let sx=0,sy=0,sxy=0,sxx=0,syy=0;pts.forEach(p=>{sx+=p.pos;sy+=p.gf;sxy+=p.pos*p.gf;sxx+=p.pos*p.pos;syy+=p.gf*p.gf;});
+    corr=(n*sxy-sx*sy)/(Math.sqrt((n*sxx-sx*sx)*(n*syy-sy*sy))||1);}
+  // busiest venue
+  const vAgg={};data.forEach(m=>{if(m.att==null)return;const a=vAgg[m.venue]||(vAgg[m.venue]={s:0,n:0});a.s+=m.att;a.n++;});
+  const topV=Object.entries(vAgg).map(([v,a])=>[v,a.s/a.n]).sort((a,b)=>b[1]-a[1])[0];
+  // discipline
+  const cards=perfL.reduce((s,p)=>s+(p.yc||0)+(p.rc||0),0);
+  const reds=perfL.reduce((s,p)=>s+(p.rc||0),0);
+  // top formation
+  const fAgg={};perfL.forEach(p=>fAgg[p.form]=(fAgg[p.form]||0)+1);
+  const topF=Object.entries(fAgg).sort((a,b)=>b[1]-a[1])[0];
+  const cards_i=[
+    {c:C.blue,ic:"⚽",h:"Scoring rhythm",p:`Matches averaged <b>${fmt1(gpm)} goals</b>. <b>${topSc[0]}</b> led the attack with <b>${topSc[1]} goals</b> scored.`},
+    {c:C.green,ic:"🏟️",h:"Home advantage",p:`Home sides won <b>${homeAdv}%</b> of fixtures (${homeW}W / ${dr}D / ${awayW} away wins) — ${homeAdv>=45?"a clear home edge":homeAdv<=30?"an unusually road-friendly stage":"a balanced split"}.`},
+    {c:C.gold,ic:"🎯",h:"Possession ≠ goals",p:`Possession-to-goals correlation is <b>${corr>=0?"+":""}${fmt1(corr)}</b> — ${Math.abs(corr)<0.2?"holding the ball barely predicted goals":corr>0?"more possession leaned toward more goals":"ceding the ball often paid off"}.`},
+    {c:C.cyan,ic:"👥",h:"Biggest draw",p:topV?`<b>${topV[0]}</b> pulled the largest crowds, averaging <b>${fmt(Math.round(topV[1]))}</b> per match.`:"No attendance data in this selection.",},
+    {c:C.red,ic:"🟥",h:"Temperament",p:`Officials issued <b>${cards} cards</b> (${reds} red) across ${data.length} matches — <b>${fmt1(cards/data.length)}</b> per game.`},
+    {c:C.violet,ic:"♟️",h:"Tactical default",p:`<b>${topF[0]}</b> was the most-trusted shape with <b>${topF[1]}</b> deployments this selection.`},
+  ];
+  box.innerHTML=cards_i.map(i=>`<div class="insight"><div class="ic" style="background:${i.c}22;color:${i.c}">${i.ic}</div><h4>${i.h}</h4><p>${i.p}</p></div>`).join("");
+}
+
+/* ---------- Master update ---------- */
+function update(){
+  const data=filtered();
+  syncSelects();
+  renderChips();
+  renderKPIs(data);
+  renderDonut(data);
+  renderHist(data);
+  renderScorers(data);
+  renderScatter(data);
+  renderFormations(data);
+  renderFormEff(data);
+  renderCards(data);
+  renderAttendance(data);
+  renderTable(data);
+  renderInsights(data);
+}
+
+/* ---------- Wire up ---------- */
+function init(){
+  populate();
+  el("f-team").onchange=e=>{F.team=e.target.value;update();};
+  el("f-venue").onchange=e=>{F.venue=e.target.value;update();};
+  el("f-gw").onchange=e=>{F.gw=e.target.value;update();};
+  el("f-ref").onchange=e=>{F.ref=e.target.value;update();};
+  el("f-form").onchange=e=>{F.form=e.target.value;update();};
+  el("reset").onclick=()=>{Object.keys(F).forEach(k=>F[k]="");search="";el("search").value="";update();};
+  el("search").oninput=e=>{search=e.target.value;renderTable(filtered());};
+  el("scorer-sort").querySelectorAll("button").forEach(b=>b.onclick=()=>{scorerSort=b.dataset.k;el("scorer-sort").querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));renderScorers(filtered());});
+  el("att-sort").querySelectorAll("button").forEach(b=>b.onclick=()=>{attSort=b.dataset.k;el("att-sort").querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));renderAttendance(filtered());});
+  update();
+}
+init();
+</script>
+</body>
+</html>
