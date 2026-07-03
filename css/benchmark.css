@@ -1,0 +1,256 @@
+.benchmark-page {
+    padding: 120px 0 5rem;
+    background: var(--gray-light);
+    min-height: 100vh;
+}
+
+.benchmark-header {
+    max-width: 900px;
+    margin-bottom: 2.5rem;
+}
+
+.benchmark-header h1 {
+    color: var(--navy);
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.benchmark-intro {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--gray-dark);
+    margin-bottom: 1.5rem;
+}
+
+.benchmark-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+}
+
+.benchmark-dataset-link {
+    text-decoration: none;
+}
+
+.benchmark-meta-note {
+    color: var(--gray);
+    font-size: 0.95rem;
+}
+
+.benchmark-meta-note code {
+    background: var(--white);
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.benchmark-style-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.benchmark-tab {
+    border: 2px solid var(--navy);
+    background: var(--white);
+    color: var(--navy);
+    padding: 0.75rem 1.25rem;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.benchmark-tab:hover {
+    background: rgba(0, 51, 102, 0.06);
+}
+
+.benchmark-tab.is-active {
+    background: var(--navy);
+    color: var(--white);
+}
+
+.benchmark-style-detail {
+    background: var(--white);
+    border-radius: 15px;
+    padding: 1.75rem 2rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+    border-left: 4px solid var(--navy);
+}
+
+.benchmark-style-detail h2 {
+    color: var(--navy);
+    font-size: 1.35rem;
+    margin-bottom: 0.75rem;
+}
+
+.benchmark-style-detail p {
+    color: var(--gray-dark);
+    line-height: 1.75;
+    margin-bottom: 1rem;
+}
+
+.benchmark-style-traits {
+    margin: 0;
+    padding-left: 1.25rem;
+    color: var(--gray-dark);
+    line-height: 1.8;
+}
+
+.benchmark-style-traits li {
+    margin-bottom: 0.35rem;
+}
+
+.benchmark-comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.benchmark-panel {
+    background: var(--white);
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.benchmark-panel-opus {
+    border-top: 4px solid var(--navy);
+}
+
+.benchmark-panel-fable {
+    border-top: 4px solid var(--orange);
+}
+
+.benchmark-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--gray-light);
+}
+
+.benchmark-panel-header h2 {
+    color: var(--navy);
+    font-size: 1.35rem;
+}
+
+.benchmark-panel-badge {
+    background: var(--gray-light);
+    color: var(--gray);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.65rem;
+    border-radius: 999px;
+}
+
+.benchmark-output-block {
+    padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.benchmark-output-block + .benchmark-output-block {
+    border-top: 1px solid var(--gray-light);
+}
+
+.benchmark-output-block h3 {
+    color: var(--gray);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+}
+
+.benchmark-frame-wrap,
+.benchmark-svg-wrap {
+    border: 1px solid var(--gray-light);
+    border-radius: 10px;
+    background: #fafbfc;
+    overflow: hidden;
+    min-height: 280px;
+}
+
+.benchmark-frame {
+    width: 100%;
+    min-height: 280px;
+    border: 0;
+    display: block;
+    background: var(--white);
+}
+
+.benchmark-svg,
+.benchmark-svg-fallback {
+    width: 100%;
+    min-height: 220px;
+    display: block;
+}
+
+.benchmark-legend {
+    background: var(--white);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.benchmark-legend h2 {
+    color: var(--navy);
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.benchmark-tree {
+    background: var(--gray-light);
+    border-radius: 10px;
+    padding: 1.25rem;
+    overflow-x: auto;
+}
+
+.benchmark-tree code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--gray-dark);
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 2rem;
+    color: var(--orange);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.back-link:hover {
+    color: var(--orange-dark);
+}
+
+.nav-link-active {
+    color: var(--orange) !important;
+}
+
+@media (max-width: 960px) {
+    .benchmark-comparison {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .benchmark-header h1 {
+        font-size: 2rem;
+    }
+
+    .benchmark-panel-header,
+    .benchmark-output-block {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
