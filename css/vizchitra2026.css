@@ -1,0 +1,69 @@
+.vizchitra-page {
+    padding: 120px 0 5rem;
+    background: var(--gray-light);
+    min-height: 100vh;
+}
+
+.vizchitra-header {
+    max-width: 900px;
+    margin-bottom: 2.5rem;
+}
+
+.vizchitra-header h1 {
+    color: var(--navy);
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.vizchitra-intro {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--gray-dark);
+    margin-bottom: 1.5rem;
+}
+
+.vizchitra-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+}
+
+.vizchitra-output-link {
+    text-decoration: none;
+}
+
+.vizchitra-note {
+    color: var(--gray);
+    font-size: 0.95rem;
+}
+
+.vizchitra-note code {
+    background: var(--white);
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 2rem;
+    color: var(--orange);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.back-link:hover {
+    color: var(--orange-dark);
+}
+
+.nav-link-active {
+    color: var(--orange) !important;
+}
+
+@media (max-width: 768px) {
+    .vizchitra-header h1 {
+        font-size: 2rem;
+    }
+}

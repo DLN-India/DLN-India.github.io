@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" role="img" aria-label="Fable 5 Carving with Stone placeholder">
-  <rect width="400" height="120" fill="#fff8f5"/>
-  <rect x="12" y="12" width="376" height="96" rx="8" fill="#ffffff" stroke="#ff6b35" stroke-width="2"/>
-  <text x="24" y="48" fill="#003366" font-family="system-ui, sans-serif" font-size="16" font-weight="700">Fable 5 - Carving with Stone</text>
-  <text x="24" y="76" fill="#6c757d" font-family="system-ui, sans-serif" font-size="13">Replace output.svg with your model SVG.</text>
-</svg>
