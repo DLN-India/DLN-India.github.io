@@ -1,0 +1,23 @@
+# D.L. Narasimhan
+
+> Personal site of D.L. Narasimhan, Applications Development Manager at UPS India Technology Center. Engineering leader (20+ engineers) focused on AI agent enablement, data governance for AI, and product engineering for high-volume logistics systems, with 17+ years of hands-on software development (.NET, C#, ASP.NET Core, system design).
+
+Key facts:
+- Role: Applications Development Manager, UPS India Technology Center
+- Leads 20+ engineers delivering 6 applications for a UPS business line, including major partner integrations
+- Works on data governance with policy makers, portfolio managers, and senior leadership across a 2,000+ person technology organization in India
+- Career: .NET developer (2007) → international experience in Belgium (2012) → Infosys (2015) → Siemens (2020) → UPS (2023)
+- Recognition: Best Project Award (2025), ADM Champion Award (Q2 2025), Maximum Monetary Value Project (2025)
+
+## Pages
+
+- [Home / Profile](https://dln-india.github.io/): Bio, current focus, journey, leadership philosophy, achievements, awards, FAQ
+- [Insights](https://dln-india.github.io/insights.html): Articles on engineering leadership
+- [VizChitra2026](https://dln-india.github.io/vizchitra2026.html): AI-assisted interactive data visualization project
+
+## Contact
+
+- LinkedIn: https://www.linkedin.com/in/laksh-naras
+- GitHub: https://github.com/dln-india
+- Medium: https://medium.com/@narasimhandl
+- Stack Overflow: https://stackoverflow.com/users/1947767
