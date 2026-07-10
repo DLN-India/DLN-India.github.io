@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="agentTitle agentDesc">
+  <title id="agentTitle">AI agent enablement workflow</title>
+  <desc id="agentDesc">Engineer intent flows through an AI agent with quality guardrails into reviewed delivery.</desc>
+  <rect width="640" height="360" fill="#0a2540"/>
+  <rect x="24" y="24" width="592" height="312" rx="16" fill="#0f2f4d"/>
+  <text x="48" y="64" fill="#f4f7fb" font-family="Georgia, serif" font-size="22">Agent enablement</text>
+  <text x="48" y="92" fill="#9db0c4" font-family="system-ui, sans-serif" font-size="13">Intent ’ agent ’ guardrails ’ human review ’ ship</text>
+  <rect x="48" y="130" width="120" height="72" rx="10" fill="#163a5c" stroke="#ff6b35" stroke-width="2"/>
+  <text x="108" y="172" text-anchor="middle" fill="#f4f7fb" font-family="system-ui, sans-serif" font-size="14">Engineer</text>
+  <path d="M178 166 H230" stroke="#ff6b35" stroke-width="2"/>
+  <polygon points="230,160 246,166 230,172" fill="#ff6b35"/>
+  <rect x="246" y="130" width="120" height="72" rx="10" fill="#163a5c" stroke="#7eb6ff" stroke-width="2"/>
+  <text x="306" y="172" text-anchor="middle" fill="#f4f7fb" font-family="system-ui, sans-serif" font-size="14">AI agent</text>
+  <path d="M376 166 H428" stroke="#ff6b35" stroke-width="2"/>
+  <polygon points="428,160 444,166 428,172" fill="#ff6b35"/>
+  <rect x="444" y="130" width="148" height="72" rx="10" fill="#163a5c" stroke="#7eb6ff" stroke-width="2"/>
+  <text x="518" y="164" text-anchor="middle" fill="#f4f7fb" font-family="system-ui, sans-serif" font-size="14">Guardrails</text>
+  <text x="518" y="184" text-anchor="middle" fill="#9db0c4" font-family="system-ui, sans-serif" font-size="11">quality · policy</text>
+  <path d="M518 202 V236 H306 V250" stroke="#ff6b35" stroke-width="2" fill="none"/>
+  <polygon points="300,250 306,242 312,250" fill="#ff6b35"/>
+  <rect x="246" y="250" width="120" height="56" rx="10" fill="#ff6b35"/>
+  <text x="306" y="284" text-anchor="middle" fill="#0a2540" font-family="system-ui, sans-serif" font-size="14" font-weight="700">Reviewed ship</text>
+</svg>
